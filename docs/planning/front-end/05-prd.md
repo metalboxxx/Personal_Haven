@@ -153,7 +153,16 @@ By reference, not restated — see `00-design-summary.md` §4: 65ch text column,
 - **Voice:** `../user_personality.md`. Blunt, short, specific. **Banned: "passionate", "leveraging", and any adjective doing work a number could do better.** State outcomes; let the reader supply the adjective. First person throughout.
 - **Register:** the writeups may be discursive — they have room to reason. Ben Kuhn's essay register is the target. This does *not* extend to the CV, which is scanned in seconds and needs the diction without the essay form.
 - **No US-default framing.** Where data or convention is US-specific, say so.
-- **Never publish:** the list in `CLAUDE.md` — client internals, backend map, admin URL, anything identifying students or his employer, broker/account configuration, paper-ledger figures unless he opts in.
+### 10.1 Never publish
+
+Authoritative list. The site must not carry:
+
+- The client organization's name, internals, backend map, or admin URL.
+- Anything identifying students, colleagues, or his employer.
+- Broker or account configuration, credentials, or API keys from `Quant_VnStocks`.
+- Paper-trading ledger figures, unless he explicitly opts in.
+
+`vnstock`'s free tier is licensed personal / research / non-commercial — check before publishing anything that reads as commercial use.
 
 ## 11. Acceptance criteria
 
