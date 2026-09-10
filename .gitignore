@@ -19,3 +19,5 @@ Thumbs.db
 
 # Playwright MCP scratch output
 .playwright-mcp/
+# Stray screenshots from browser automation
+/*.png

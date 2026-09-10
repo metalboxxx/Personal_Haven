@@ -1,0 +1,79 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  title={`Contact — ${site.name}`}
+  description={`Email ${site.email}. No form, no calendar link — Ho Chi Minh City, UTC+7.`}
+>
+  <article class="shell page">
+    <header class="page__head">
+      <p class="eyebrow">Contact</p>
+      <h1>Email. There is no form.</h1>
+    </header>
+
+    <div class="prose">
+      <p class="lede">
+        <a class="email" href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+
+      <p>
+        I am in {site.location}, UTC+7.
+      </p>
+
+      <h2>What is useful to send</h2>
+      <ul>
+        <li>
+          A specific question about anything in the writeups. Disagreement about
+          the statistics is more welcome than agreement about them.
+        </li>
+        <li>
+          Work in Vietnamese market data, education technology, or LLM pipelines
+          where the cost per call actually matters.
+        </li>
+        <li>
+          Corrections. If a number on this site is wrong I would rather find out
+          from you than not find out.
+        </li>
+      </ul>
+
+      {site.links.length > 0 && (
+        <>
+          <h2>Elsewhere</h2>
+          <ul>
+            {site.links.map((l) => (
+              <li><a href={l.href}>{l.label}</a>{l.note && <span class="muted"> — {l.note}</span>}</li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <h2>On code links</h2>
+      <p>
+        Two of the four writeups have no public repository, and the pages say so
+        plainly rather than showing a link that goes nowhere. The quantitative
+        work carries account configuration that has no business being published,
+        and the platform work is not my code to publish. If you need to see
+        something specific from either, ask and I will tell you what I can show.
+      </p>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .page { padding-block: var(--s-5) var(--s-7); }
+  .page__head {
+    max-width: var(--measure);
+    padding-bottom: var(--s-4);
+    margin-bottom: var(--s-6);
+    border-bottom: 1px solid var(--border);
+  }
+  .page__head h1 { font-size: var(--step-3); letter-spacing: -0.02em; }
+  .email {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-style: italic;
+    word-break: break-word;
+  }
+</style>

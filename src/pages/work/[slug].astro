@@ -1,0 +1,106 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+import { site } from '../../data/site';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('work');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  headline: d.title,
+  abstract: d.result,
+  datePublished: d.date.toISOString().slice(0, 10),
+  inLanguage: 'en',
+  author: { '@type': 'Person', name: site.name },
+};
+---
+
+<Base title={`${d.title} — ${site.name}`} description={d.description} jsonLd={jsonLd}>
+  <article class="shell writeup">
+    <header class="writeup__head">
+      <p class="eyebrow">{d.subject}</p>
+      <h1>{d.title}</h1>
+      <p class="writeup__result">{d.result}</p>
+      <p class="writeup__meta">
+        <time datetime={d.date.toISOString().slice(0, 10)}>{d.dateLabel}</time>
+        <span aria-hidden="true">·</span>
+        {d.code ? (
+          <a href={d.code.href}>{d.code.label}</a>
+        ) : (
+          <span class="writeup__nocode">{d.codeNote}</span>
+        )}
+      </p>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <nav class="writeup__back" aria-label="Back">
+      <a href="/#work">← All four writeups</a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .writeup { padding-block: var(--s-5) var(--s-7); }
+
+  /* No rule under the head — the first <h2>'s accent rule is the divider, and
+     two lines 40px apart reads as a mistake. */
+  .writeup__head {
+    max-width: var(--measure);
+    margin-bottom: var(--s-6);
+  }
+
+  .writeup__head h1 {
+    font-size: var(--step-3);
+    letter-spacing: -0.02em;
+  }
+
+  .writeup__result {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-style: italic;
+    line-height: 1.45;
+    margin-top: var(--s-3);
+    padding-left: var(--s-3);
+    border-left: 2px solid var(--accent);
+  }
+
+  .writeup__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--s-1) var(--s-2);
+    margin-top: var(--s-4);
+    margin-bottom: 0;
+    font-size: var(--step--1);
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  /* Deliberate, not a broken button. Reads as a stated fact, styled like the
+     rest of the metadata — no disabled link, no "coming soon". */
+  .writeup__nocode {
+    color: var(--muted);
+    border: 1px solid var(--border-strong);
+    border-radius: 2px;
+    padding: 0.125rem var(--s-1);
+  }
+
+  .writeup__back {
+    max-width: var(--measure);
+    margin-top: var(--s-7);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--border);
+    font-size: var(--step--1);
+  }
+</style>

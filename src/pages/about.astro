@@ -1,0 +1,124 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  email: `mailto:${site.email}`,
+  jobTitle: site.role,
+  address: { '@type': 'PostalAddress', addressLocality: site.location, addressCountry: 'VN' },
+};
+---
+
+<Base
+  title={`About — ${site.name}`}
+  description="Self-taught by being quizzed: how I learn, what I work on in Ho Chi Minh City, and the kind of argument I find interesting."
+  jsonLd={jsonLd}
+>
+  <article class="shell page">
+    <header class="page__head">
+      <p class="eyebrow">About</p>
+      <h1>I learned nearly all of it by being quizzed.</h1>
+    </header>
+
+    <div class="prose">
+      <p class="lede">
+        Ho Chi Minh City. Web development, security and LLM pipelines on one
+        side; English-teaching material for Vietnamese students on the other.
+        Those halves are not two hobbies that happen to share a person — the
+        test-extraction work on the home page exists precisely where they meet.
+      </p>
+
+      <h2>No credential, an actual curriculum</h2>
+      <p>
+        I am not certified in any of this. What I have instead is a method, and
+        it is narrower than "self-taught" usually means: I learn things by being
+        quizzed on them and then grading myself honestly.
+      </p>
+      <p>
+        In practice that looks like TryHackMe rooms worked through topic by
+        topic, redone from the start after a bad score rather than moved past.
+        It looks like writing my own grammar exercises, finishing them in a
+        scratchpad, and only then checking against the answer key I wrote. It
+        looks like learning TypeScript by mapping every concept onto Python I
+        already knew, so the new thing had somewhere to attach.
+      </p>
+      <p>
+        The failure mode this avoids is the one where you read a tutorial,
+        follow along, feel competent, and cannot reproduce any of it a week
+        later. Grading yourself honestly is the whole trick, and it is
+        unpleasant often enough that most people skip it.
+      </p>
+
+      <h2>How I argue</h2>
+      <p>
+        I ask for sources at the level a paper would need, and I check effect
+        sizes against the claims made about them. An anomaly with an R² of 0.6%
+        is not a strong relationship no matter how small the p-value is; a
+        sample of 28 does not support "there is nothing here". Both of those
+        sentences are on this site because I had to write them about my own
+        results.
+      </p>
+      <p>
+        I do not take framings at face value. A loud ego is not the only kind —
+        ego is about gravity rather than volume, about how much the self bends
+        what gets perceived. Criticism is usually a more credible form of
+        loyalty than praise is. I have argued both of those at length and I will
+        again.
+      </p>
+      <p>
+        I am also skeptical of my own field's hype cycles. I spent a while
+        questioning whether vector databases and retrieval pipelines still earn
+        their complexity now that context windows are enormous, and landed on
+        "give the model a table of contents and let it ask" before I found out
+        that approach had a name.
+      </p>
+      <p>
+        One specific thing: I do not accept US regulatory or market framing as
+        the default. Vietnam has its own disclosure deadlines, its own
+        transaction taxes, its own absence of retail stock borrowing. When a
+        study is built on US data I want that said, not implied to transfer.
+      </p>
+
+      <h2>The disproportionate interest</h2>
+      <p>
+        Cross-domain pattern transfer, and specifically what playing drums does
+        to a brain and whether any of it carries onto a badminton court.
+        Corpus callosum thickness in drummers, four-limb independence, timing
+        circuitry, whether motor learning of that kind shows up as reading an
+        opponent's patterns earlier.
+      </p>
+      <p>
+        I will read the actual neuroscience and then argue about whether the
+        sample sizes justify the claims, which is usually where that
+        conversation ends up and is the part I enjoy.
+      </p>
+
+      <h2>What I am doing now</h2>
+      <p>
+        Quantitative research on Vietnamese equities — a factor and strategy
+        pipeline with a weekly pass scheduled but not yet run end to end,
+        currently one strategy screened to a negative result and one separate
+        study with a positive one. Test
+        material and platform work on the teaching side. Both are written up on
+        the <a href="/">home page</a>, including the parts that did not work.
+      </p>
+      <p>
+        If you want to talk about any of it, <a href="/contact/">contact</a>.
+      </p>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .page { padding-block: var(--s-5) var(--s-7); }
+  .page__head {
+    max-width: var(--measure);
+    padding-bottom: var(--s-4);
+    margin-bottom: var(--s-6);
+    border-bottom: 1px solid var(--border);
+  }
+  .page__head h1 { font-size: var(--step-3); letter-spacing: -0.02em; }
+</style>

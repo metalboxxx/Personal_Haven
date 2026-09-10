@@ -1,0 +1,153 @@
+---
+/**
+ * Decorative line field for the hero band (PRD §8).
+ *
+ * Constraints this satisfies:
+ *  1. Hero band only. It is rendered in its own strip BELOW the hero text —
+ *     nothing is ever drawn behind running text.
+ *  2. Static by default. The SVG is generated at build time and is complete
+ *     with zero animation and with JS disabled. A ~300-byte inline script adds
+ *     the `is-animated` class as a progressive enhancement.
+ *  3. `prefers-reduced-motion: reduce` is checked in that script AND in CSS, so
+ *     displacement is stripped twice over.
+ *  4. Hand-written CSS transform on two <g> groups. No animation library.
+ *  5. Cost: one inline SVG (~14KB uncompressed, no network request), no canvas,
+ *     no images, fixed height => zero CLS.
+ *
+ * DATA: src/data/hero-series.json is a SYNTHETIC placeholder, generated from a
+ * seeded mean-reverting process. It is NOT real market data and nothing in the
+ * visible copy claims it is. Replace it with a real normalised series from
+ * Quant_VnStocks once the owner decides which series may be published.
+ */
+import data from '../data/hero-series.json';
+
+const W = 1000;      // one loop width, in viewBox units
+const H = 300;
+const PAD = 28;
+
+const series: number[][] = data.series;
+
+function polyline(values: number[], slot: number, count: number, offset: number) {
+  const n = values.length;
+  // Each series gets an overlapping vertical slot, so the field reads as a
+  // stacked panel of spreads rather than one noisy scribble.
+  const lane = PAD + (slot * (H - 2 * PAD)) / Math.max(count - 1, 1);
+  const amp = (H - 2 * PAD) / 3.1;
+  return values
+    .map((v, i) => {
+      const x = offset + (i * W) / (n - 1);
+      const y = lane + (0.5 - v) * amp;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(' ');
+}
+
+const back = series.slice(0, 5);
+const front = series.slice(5);
+---
+
+<div class="hero-field" data-hero-field>
+  <svg
+    class="hero-field__svg"
+    viewBox={`0 0 ${W * 2} ${H}`}
+    preserveAspectRatio="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <g class="hero-field__layer hero-field__layer--back">
+      {back.map((s, i) => (
+        <>
+          <polyline points={polyline(s, i, back.length, 0)} />
+          <polyline points={polyline(s, i, back.length, W)} />
+        </>
+      ))}
+    </g>
+    <g class="hero-field__layer hero-field__layer--front">
+      {front.map((s, i) => (
+        <>
+          <polyline
+            class={i === 1 ? 'is-hot' : undefined}
+            points={polyline(s, i, front.length, 0)}
+          />
+          <polyline
+            class={i === 1 ? 'is-hot' : undefined}
+            points={polyline(s, i, front.length, W)}
+          />
+        </>
+      ))}
+    </g>
+  </svg>
+</div>
+
+<script is:inline>
+  // Progressive enhancement only. Without this the field is a static drawing.
+  (function () {
+    try {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      for (const el of document.querySelectorAll('[data-hero-field]')) {
+        el.classList.add('is-animated');
+      }
+    } catch (e) {
+      /* no motion; the static field is the fallback */
+    }
+  })();
+</script>
+
+<style>
+  .hero-field {
+    position: relative;
+    height: clamp(9rem, 17vw, 13.5rem);
+    overflow: hidden;
+    /* Fades in from the page above and out at both edges, so the strip has no
+       hard boundary and never looks like a pasted-in banner. */
+    -webkit-mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 42%, #000 88%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 42%, #000 88%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
+  .hero-field__svg {
+    display: block;
+    width: 200%;
+    height: 100%;
+  }
+
+  .hero-field__layer {
+    fill: none;
+    stroke: var(--hero-ink);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  /* vector-effect is not inherited — it has to sit on the drawn element. */
+  .hero-field__layer polyline { vector-effect: non-scaling-stroke; }
+  .hero-field__layer--back { stroke-width: 1; opacity: 0.62; }
+  .hero-field__layer--front { stroke-width: 1.4; opacity: 0.9; }
+  .hero-field__layer--front .is-hot {
+    stroke: var(--hero-ink-hot);
+    stroke-width: 2;
+  }
+
+  /* Motion is opt-in: applied only once the inline script has confirmed the
+     visitor has not asked for reduced motion. */
+  .hero-field.is-animated .hero-field__layer--back {
+    animation: hero-drift 150s linear infinite;
+  }
+  .hero-field.is-animated .hero-field__layer--front {
+    animation: hero-drift 96s linear infinite;
+  }
+
+  @keyframes hero-drift {
+    from { transform: translateX(0); }
+    to { transform: translateX(-1000px); }
+  }
+
+  /* Belt and braces — the script already bails out, but if the preference
+     changes after load the CSS still strips all displacement. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-field .hero-field__layer { animation: none !important; }
+  }
+</style>

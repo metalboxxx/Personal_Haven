@@ -1,0 +1,274 @@
+/* ---------------------------------------------------------------------------
+   Design tokens. Palette verified against WCAG 2.1 in BOTH themes:
+   text 4.5:1+, UI/borders 3:1+. Dark is a separately tuned palette, not an
+   inversion: warm near-black (#141210, never #000) and the accent desaturated
+   and lightened ~12% from its light-theme value.
+   Colour split is 60/30/10 — paper, ink, one accent (burnt oxide). The accent
+   is used ONLY for links, focus rings and the single accent rule.
+   --------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light dark;
+
+  /* Type scale — 6 steps, ratio 1.25 → 1.333, fluid between 380px and 1240px. */
+  --step--1: clamp(0.83rem, 0.81rem + 0.10vw, 0.89rem);
+  --step-0:  clamp(1.03rem, 0.99rem + 0.19vw, 1.15rem);
+  --step-1:  clamp(1.29rem, 1.21rem + 0.35vw, 1.53rem);
+  --step-2:  clamp(1.61rem, 1.47rem + 0.60vw, 2.04rem);
+  --step-3:  clamp(2.01rem, 1.77rem + 1.00vw, 2.72rem);
+  --step-4:  clamp(2.52rem, 2.11rem + 1.71vw, 3.63rem);
+  --step-5:  clamp(3.15rem, 2.48rem + 2.79vw, 4.84rem);
+
+  /* Spacing — strict 8px scale. No arbitrary pixel values anywhere. */
+  --s-1: 0.5rem;   /*  8 */
+  --s-2: 1rem;     /* 16 */
+  --s-3: 1.5rem;   /* 24 */
+  --s-4: 2rem;     /* 32 */
+  --s-5: 3rem;     /* 48 */
+  --s-6: 4rem;     /* 64 */
+  --s-7: 6rem;     /* 96 */
+  --s-8: 8rem;     /* 128 */
+
+  --measure: 65ch;
+  --shell: 50rem;   /* 800px page shell — one left edge shared by the header,
+                       the home index and every text page.
+                       Sized so that shell minus its inline padding (~704px)
+                       lands on the 65ch measure: the text column fills the
+                       shell instead of hugging its left edge and leaving a
+                       dead zone to the right on wide screens. */
+
+  --font-display: 'Newsreader', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+
+  /* Light palette (default) */
+  --bg: #FBF9F6;
+  --surface: #F2EDE6;
+  --text: #191612;
+  --muted: #5A534A;
+  --border: #DCD3C6;
+  --border-strong: #8C8375;
+  --accent: #A63A16;
+  --accent-contrast: #FFFFFF;
+  --hero-ink: #B8AFA1;      /* decorative only — deliberately low contrast */
+  --hero-ink-hot: #C98A6B;
+  --selection: #F3D8C9;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141210;
+    --surface: #1D1A16;
+    --text: #EEE9E1;
+    --muted: #A69D90;
+    --border: #332E27;
+    --border-strong: #6B6156;
+    --accent: #E08B5C;
+    --accent-contrast: #1A1512;
+    --hero-ink: #4A423A;
+    --hero-ink-hot: #6E4E39;
+    --selection: #472C1D;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* Reserve the scrollbar gutter on every page so a short page and a long one
+     centre on the same axis — without it the shell shifts ~8px between them. */
+  scrollbar-gutter: stable;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--selection); color: var(--text); }
+
+/* --- Landmarks and shell ------------------------------------------------- */
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--s-3);
+}
+@media (min-width: 48em) { .shell { padding-inline: var(--s-5); } }
+
+.measure { max-width: var(--measure); }
+
+.skip-link {
+  position: absolute;
+  left: var(--s-2);
+  top: var(--s-2);
+  z-index: 100;
+  transform: translateY(-200%);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  padding: var(--s-1) var(--s-2);
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus { transform: none; }
+
+/* --- Typography ---------------------------------------------------------- */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.012em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--step-4); }
+h2 { font-size: var(--step-2); }
+h3 { font-size: var(--step-1); }
+
+p { margin: 0 0 var(--s-3); text-wrap: pretty; }
+p:last-child { margin-bottom: 0; }
+
+strong { font-weight: 600; }
+
+a {
+  color: var(--accent);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: color-mix(in oklab, var(--accent) 45%, transparent);
+  transition: text-decoration-color 160ms ease, color 160ms ease;
+}
+a:hover { text-decoration-color: var(--accent); }
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Numbers. Every figure on this site is a real measurement — set them so. */
+.num, code, kbd, samp {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  font-variant-numeric: tabular-nums;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 var(--s-2);
+}
+
+.lede { font-size: var(--step-1); line-height: 1.5; color: var(--text); }
+.muted { color: var(--muted); }
+
+hr.rule {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: var(--s-6) 0;
+}
+
+/* --- Site chrome --------------------------------------------------------- */
+
+.site-header {
+  position: relative;
+  z-index: 2;
+  padding-block: var(--s-3);
+}
+.site-header > .shell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  align-items: baseline;
+  justify-content: space-between;
+}
+.wordmark {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  text-decoration: none;
+}
+.wordmark:hover { color: var(--accent); }
+
+.site-nav ul {
+  display: flex;
+  gap: var(--s-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: var(--step--1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.site-nav a { color: var(--muted); text-decoration: none; }
+.site-nav a:hover { color: var(--accent); }
+.site-nav a[aria-current='page'] {
+  color: var(--text);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.site-footer {
+  margin-top: var(--s-8);
+  border-top: 1px solid var(--border);
+  padding-block: var(--s-4) var(--s-6);
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+.site-footer .shell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  justify-content: space-between;
+}
+
+main { display: block; }
+
+/* --- Prose (writeups, about) --------------------------------------------- */
+
+.prose { max-width: var(--measure); }
+.prose > h2 {
+  font-size: var(--step-2);
+  margin-top: var(--s-7);
+  margin-bottom: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 2px solid var(--accent);
+}
+.prose > h2:first-child { margin-top: 0; }
+.prose > h3 { margin-top: var(--s-5); margin-bottom: var(--s-2); }
+.prose ul, .prose ol { margin: 0 0 var(--s-3); padding-left: var(--s-3); }
+.prose li { margin-bottom: var(--s-1); }
+.prose li::marker { color: var(--accent); }
+.prose blockquote {
+  margin: var(--s-4) 0;
+  padding-left: var(--s-3);
+  border-left: 2px solid var(--border-strong);
+  color: var(--muted);
+  font-style: italic;
+}
+
