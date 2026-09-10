@@ -88,11 +88,15 @@ The thesis appears **exactly once**, on the home page. Draft:
 
 ### 7.2 Writeup format — identical for all four
 
-Every writeup follows the same four headings, in this order:
+Every writeup follows the same five headings, in this order:
 
-**Constraint → Decision → What I rejected → Outcome**
+**What it is → Constraint → Decision → What I rejected → Outcome**
 
-**Acceptance criterion:** the "What I rejected" section is present and non-empty in all four. It is the section no other portfolio has, and it is what makes the thesis emerge without being repeated.
+`What it is` was added on 2026-09-10. The four-heading version opened on a constraint applying to a thing the reader had not yet been told about, which he called out directly. It is at most four sentences: what it is, what it does, what state it is in.
+
+**Acceptance criterion:** all five headings are present, in this order, in all four writeups, and `What I rejected` is non-empty. That section is the one no other portfolio has, and it is what makes the thesis emerge without being repeated.
+
+**Acceptance criterion (altitude, added 2026-09-10):** no writeup contains a file path, a flag name, a config key, a one-line root cause, or a numbered question reference. Those live in each project's `docs/history/` and are debugging records, not decisions. Each writeup stays under ~700 words of body text, measured excluding frontmatter. `cointegration-screen` runs longest because §7.4's AI disclosure lives in it and nowhere else. See `CLAUDE.md`, *Writing the work writeups*, for the full rule set.
 
 ### 7.3 The attribution rule
 
@@ -105,7 +109,9 @@ Per `CLAUDE.md` and `04-project-inventory.md` §1, `Quant_VnStocks` decisions ar
 
 ### 7.4 AI use, disclosed once
 
-The quant writeup states plainly that a model wrote much of the code, and then gives the evidence that matters: the accidental live run — disclosed, reverted, verified (cash back to exactly 300,000,000 VND, positions empty, pending order intact), and root-caused with `[CmdletBinding(PositionalBinding = $false)]`.
+The quant writeup states plainly that a model wrote much of the code, and then gives the evidence that matters: what he caught. The transaction tax stated as two-sided when it is sell-side only; a Sharpe ratio applied to raw screening data; a real run that executed when a dry run was intended, disclosed and reverted rather than quietly deleted.
+
+**Amended 2026-09-10:** the earlier version of this section required the verification checklist and the one-line root cause on the page. Both are debugging detail and are now excluded by §7.2's altitude criterion. The disclosure stays; its forensics do not.
 
 **Rationale:** the 2025 Stack Overflow survey puts AI adoption at 84% against 3% who highly trust the output; the scarce skill is catching what's wrong, not avoiding the tool. Volunteering this is stronger than being asked. It appears once, in context — never as a badge or a site-wide banner.
 
@@ -116,7 +122,7 @@ The quant writeup states plainly that a model wrote much of the code, and then g
 | `cointegration-screen` | The cointegration pairs screen | 435 pairs → 378 tested → **zero survivors**; VN100 sector 501, zero; pooled 4,950, zero. Plus the ACB/OCB case study and the refusal to loosen `alpha_fdr`. | None — state "code not public" |
 | `pead` | Post-earnings-announcement drift, VN equities | **+4.75% abnormal 20-day return, p=0.0008, n=202** in VN100 mid-caps; nothing in VN30 (n=28, p=0.37). Caveats — the Jan-31 proxy, R²=0.6% — stated as prominently. | None — state "code not public" |
 | `test-extraction` | The Cambridge/YLE extraction pipeline | 91 commits over five months, ten test batches; **35 of 40** auto-extracted on Đề 043–046, the other five had no answer-key lines in the source. The org chose manual entry. | Owner's call |
-| `live-platform-qa` | QA and integration on a live education platform | Concrete findings: the answer-key field mismatch that emptied all 40 answers, the ~50 req/min limit, the page-7-vs-10 truncation. Two commits merged upstream. | Public site; his role is his to describe |
+| `exam-item-scoring` | Scoring image-based exam items on a live education platform | Crop-and-overlay scrapped on three failure modes; replaced by a click tolerance radius (Part 1) and transparent boxes with a fixed palette (Part 5); drawing accepted as text. Two commits merged upstream. | Public site; client unnamed, no exam artwork |
 
 **Requirement:** two of these have no public repository. The "no link" state must read as deliberate — a short *code not public* line — never as a missing or broken button.
 
@@ -197,3 +203,4 @@ Authoritative list. The site must not carry:
 | 2026-09-10 | Layout archetype B — benkuhn.net's shape, dhh.dk's typography | Owner: "his layout tho needs more work" — §6 lists what to fix |
 | 2026-09-10 | Home absorbs Work; three pages, not four | Four writeups make a separate index redundant |
 | 2026-09-10 | Animated background is in scope, under five constraints | Scoped exception to `00` §6, recorded in both documents |
+| 2026-09-10 | Writeups gain a `What it is` section and an altitude limit | His call: the pages opened on constraints without saying what the thing was, and carried debugging detail already in the project logs. §7.2 and §7.4 amended |

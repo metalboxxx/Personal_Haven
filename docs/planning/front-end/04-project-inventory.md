@@ -124,6 +124,45 @@ This is **not** the extraction pipeline and should never be merged with it (see 
 
 **Open questions for him:** Is the experimental repo publishable, separate from the group's? Is the vocabulary-pronunciation front end actually deployed on the live site — a fetch of `kienthucvang.com` returned no readable content (likely a JS app), so deployment is **unconfirmed**, though the starters importer did land in the group repo.
 
+### Separate work: exam-authoring design on the live platform
+
+**Provenance: stated directly by the user on 2026-09-10, in conversation. Not in any repository and not in any history log.** It is design work on the group's platform, distinct from both the extraction pipeline (§2) and the QA findings above. Highest authority in this document — he is describing his own decisions — but nothing here has been cross-checked against code, because there is no code here to check.
+
+**The problem.** Cambridge YLE Starters / Movers / Flyers Listening use picture-based item types that assume paper: Part 1 requires marking a position in a large scene, and Part 5 ("colour and write") requires colouring named objects and drawing new ones. None of that survives a naive port to a browser.
+
+**Scrapped first: crop-and-overlay.** Crop the object out of the big picture — his example is a book — and lay the crop back on top of the real book in the scene, making that region clickable and selectable. It was intended to serve **both** Part 1 and Part 5. Three failure modes killed it:
+
+- image quality was unreliable;
+- the crops did not render consistently;
+- with the whole scene on screen, students could not tell what they were looking at.
+
+His own summary: *"it was very ugly."* Scrapped for both parts.
+
+**Part 1, current solution: a click tolerance radius.** The author places a point on the picture, and a student click counts as correct if it falls within a radius of that point — because, in his words, *"realistically students cant click on the exact point."* He rates it plainly: *"its nothing fancy but its the solution after a few iterations of other solutions on how to tackle the image problem."*
+
+**Resolved by a screenshot he supplied on 2026-09-10** (student view, a Part 1 scene with a horse, a pond and seven name chips). It is line-matching after all, and the earlier two-point ambiguity in his description is dead — one author point per name, one student click, one distance test. The screenshot adds detail his description did not:
+
+- Name chips sit around the perimeter of the scene, matching the paper layout.
+- The **example item** is pre-drawn: plain unboxed text, solid black line, already connected.
+- A **student answer** renders as a dashed line from the chip ending in a visible dot. **The dot is the click point; the tolerance radius around the author's target is never drawn.** The student sees a line, not a hit test.
+- Chips carry **selection** state, not answer state — blue outline unselected, green outline plus a check mark when selected (confirmed by him, 2026-09-10). Daisy is green because it is the chip currently being worked on; the dashed line is its in-progress connection.
+- The "line" is therefore presentational. The scored object is the click point alone.
+
+- *Still not confirmed:* whether the radius test runs in normalised image coordinates. That was an inference offered back to him and neither confirmed nor denied.
+- **The student view never shows correctness.** Green is selection. The tolerance test runs, but its verdict is not surfaced to the student — which is the correct behaviour for a live test and worth stating explicitly, because a reader shown this screenshot will otherwise read the check mark as "right".
+
+**Do not publish this screenshot or any derivative of it.** It is Cambridge YLE exam artwork inside the client's interface — copyrighted content belonging to two parties, neither of them him, and it identifies the platform. A redrawn schematic of the mechanism (a box, two chips, a target point, a radius) carries the whole idea and owns none of the risk.
+
+**Part 5, current solution: transparent boxes plus a fixed palette.** The author draws a transparent box over the real object in the big image and sets the colour it should be. A picture carries several boxes. The student clicks a box and chooses a colour from a **fixed palette** (confirmed).
+
+**Part 5, the drawing half: no drawing.** The author writes out what should be drawn and the student **writes** the answer as text. This is the compromise the crop-and-overlay approach existed to avoid — the reason it was tried at all — and it stands because the alternative was worse.
+
+**His stated reason for the shape of both solutions**, in his own CV wording: *"built for speed, determinism and UI clarity"* — the scoring is evaluated in the client.
+
+**Why this belongs on the site.** It is the through-line again, in a domain unrelated to the others: image manipulation lost to geometry plus text. The cheap, reliable mechanism beat the clever, fragile one, and the losing approach is documented with its three specific failure modes rather than remembered vaguely. It also has the full constraint → decision → rejected alternative → outcome shape without needing any of it reconstructed.
+
+**Still missing:** what the *other* iterations were. He says the tolerance radius arrived "after a few iterations"; crop-and-overlay is the only one named so far.
+
 ---
 
 ## 3. Cross-cutting patterns
@@ -146,8 +185,11 @@ Appearing in *both* projects, which is what makes them evidence of a way of thin
 | 3 | EnglishTest_Tutor extraction pipeline | Side project; five months, 91 commits, ten test batches, named failure modes with causes | Needs his call |
 | 4 | QA and bug-fixing on `kienthucvang.com`, a live production platform | A real live site he works on; evidenced by concrete integration findings and two upstream-merged commits | Site is public; his role is his to describe |
 | 5 | Vocabulary-pronunciation web app (React/Vite/Tailwind, TTS audio) | The only visual/front-end artifact; its starters importer is merged upstream, but deployment unconfirmed | Needs his call |
+| 6 | Exam-authoring design on the live platform: click tolerance radius (Part 1), transparent boxes + fixed palette (Part 5) | **His own design decisions, stated by him** — a scrapped approach with three named failure modes and a cheap mechanism that beat it. The only candidate whose reasoning needs no reconstruction | Mechanism is his to describe; client stays unnamed |
 
-**#4 and #5 are the same client but different claims** and must stay separate — one is "I fix and test a live platform," the other is "I built this page." Conflating them would repeat the §6 error.
+**#4, #5 and #6 are the same client but three different claims** and must stay separate — "I fix and test a live platform," "I built this page," and "I designed how this item type is scored." Conflating any two would repeat the §6 error.
+
+**On his CV he leads with #6, not #4.** When he rewrote this section himself on 2026-09-10 he replaced every QA-findings bullet with exam-authoring design work. Treat #6 as the primary claim for this client and #4 as supporting evidence, not the reverse — which is the ordering `src/content/work/live-platform-qa.md` currently has backwards (see §6.6).
 
 **The count problem is solved.** Reading the logs turned two-and-a-bit candidates into **four usable plus one unconfirmed**, comfortably inside the 3–6 the design summary assumes. The constraint on the site is no longer "not enough projects" — it is that the strongest two live in a repo with no published code, so their writeups have to carry themselves on reasoning and numbers rather than a link.
 
@@ -176,3 +218,4 @@ Five claims in this document's earlier versions were wrong. Four were corrected 
 3. **"No git repo — worth fixing regardless" — wrong framing.** The absence is deliberate; he has not initialized one because he does not feel safe publishing it yet. Not an oversight to correct unprompted.
 4. **"Vietnamese–English code-switching research" — dropped.** He does not recall it as a distinct project; it was likely incidental research inside something else. Removed as a candidate.
 5. **The whole of §1 was written without reading the source.** The first two versions of this document described Quant_VnStocks from its CLAUDE.md and memory files only — twenty history logs sat unread in `docs/history/`. That is *also* the root cause of §6.2: the prompt-injection finding is dated 2026-07-02 and attributed to Claude in the log itself, so the misattribution was not a judgement call but a consequence of not opening the file. The logs also revealed an entire second study (PEAD, a positive result) that no earlier version mentioned. *Lesson: summaries are not sources. Read the primary record before characterising a project — and before attributing anything in it to anyone.*
+6. **`live-platform-qa.md` was written about the wrong half of this client's work — replaced on 2026-09-10 by `exam-item-scoring.md`.** All 819 words of it are QA and debugging findings — the empty answer key, the rate limit, the page-7 truncation — because those were what the history logs happened to record. When he wrote his own CV bullets for this client on 2026-09-10 he used none of them, and described exam-authoring design instead (§2, *Separate work: exam-authoring design*). The logs were not wrong; they were the only source consulted, and they only cover what a session happened to be doing. *Lesson: the logs record what Claude worked on, which is a biased sample of what he works on. Absence from the logs is not absence from the job — ask him what the work is before deciding what the writeup is about.*

@@ -11,6 +11,12 @@ codeNote: "Code not public."
 description: "An event study of post-earnings-announcement drift on Vietnamese equities: a significant result in VN100 mid-caps, nothing in VN30, and the caveats stated as loudly as the number."
 ---
 
+## What it is
+
+An event study run through the same Vietnamese-market research pipeline as the pairs screen: does a stock keep drifting in the direction of an earnings surprise after the announcement?
+
+It is the study that worked. The pairs screen is the one that did not, and both were held to the same reporting standard.
+
 ## Constraint
 
 Post-earnings-announcement drift is one of the oldest anomalies in the US literature. That is exactly why it should not be assumed to transfer: it is a claim about US disclosure conventions, US coverage and US investor mix. The Vietnamese market is a different question, and the data available for asking it is worse.
@@ -45,7 +51,7 @@ The reporting standard is the same one the cointegration screen got: the caveats
 
 ## Outcome
 
-**VN100 mid-caps: real drift.** n=**202** events. Strong-beat mean abnormal 20-day return **+4.75%**, t-test p=**0.0008**, Mann-Whitney p=**0.0055**. The non-parametric test agreeing with the parametric one matters, because event-study returns are not well behaved.
+**VN100 mid-caps: real drift.** n=**202** events. Strong-beat mean abnormal 20-day return **+4.75%**, significant on both a t-test and a rank test — which matters, because event-study returns are not well behaved.
 
 **VN30 large-caps: nothing.** n=**28**, p=**0.37**. The straightforward reading is that it is already priced in — the most-covered thirty names in the market do not leave a twenty-day gap lying around.
 
@@ -56,4 +62,4 @@ The caveats, restated because they belong beside the result:
 - Annual data, because the free tier will not return more.
 - n=28 in VN30 is small enough that "nothing" means "nothing detectable at this sample size", not "nothing exists".
 
-Two studies, one standard. This is the one that worked; the pairs screen is the one that did not. Neither number was allowed to travel without its caveats, and that is the only reason the positive one is worth anything.
+Neither number was allowed to travel without its caveats, and that is the only reason the positive one is worth anything.

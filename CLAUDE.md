@@ -43,6 +43,24 @@ src/
 
 `src/data/site.ts` is the single config: name, email, location, links. Nothing else hardcodes them — adding a `links` entry renders it on `/contact` on its own.
 
+## Writing the work writeups
+
+Rules for `src/content/work/*.md`. They came from him marking up drafts of his own CV and these pages on 2026-09-10, and they override the instinct to explain.
+
+**Sections, in this order:** `What it is` → `Constraint` → `Decision` → `What I rejected` → `Outcome`. `What it is` is new and non-negotiable: a reader cannot evaluate a constraint on a thing they have not been told about. Four sentences at most — what it is, what it does, what state it is in.
+
+**The altitude test, which is the rule most drafts fail.** A detail earns its place if it changed how the project turned out, or explains why. If its only use is reproducing a fix, it belongs in that project's `docs/history/`, where it already is. Concretely, off the page: file paths, flag names, config keys, one-line root causes, question numbers, per-item verification checklists.
+
+**Keep the number that *is* the finding; drop the statistics that support it.** `n=28, p=0.37` stays when the p-value is the result. `+4.75%` does not need its t-test and its Mann-Whitney beside it.
+
+**No justification tail on a fact.** The rejected alternative gets argued once, under `What I rejected`, and nowhere else. A sentence that states a number and then defends the choice behind it is two sentences in the wrong sections.
+
+**One claim per paragraph. Name tools, do not describe capabilities. Under ~700 words of body text** — before the 2026-09-10 rewrite they ran 729–1,270, and that was the complaint. `cointegration-screen` sits highest because PRD §7.4's AI disclosure lives only there.
+
+**Voice comes from `docs/user_personality.md`**, including its banned list ("passionate", "leveraging", any adjective a number would do better). Attribution comes from PRD §7.3 and `04` §1 — anything the inventory marks as Claude's stays off the page, and no sentence claims a decision he did not make.
+
+**What does *not* transfer from his CV.** He strips negative results and non-adoption from a CV. Here they are the story — the screen that found nothing, the pipeline the organisation did not adopt. Keep them.
+
 ## Commands
 
 ```bash
