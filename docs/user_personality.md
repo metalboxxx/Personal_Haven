@@ -59,7 +59,7 @@ Most of what he knows he learned by being quizzed (see Basics). Not a credential
 ## Implications for the website
 
 1. **Signature element (proposed, pending his confirmation):** the through-line itself — *how something under-resourced beats something better-resourced* — stated plainly, with projects across unrelated domains as evidence. Nobody can copy it, because it is a real pattern in how he thinks rather than a design choice.
-2. **Project writeup format follows from it:** what it is → constraint → decision → what was rejected and why → outcome. (`What it is` added 2026-09-10 — see PRD §7.2, which is authoritative on the format.) This doubles as the "documentation of reasoning" that skeptical hiring managers say they want, which is how personality and credibility stop being a tradeoff here.
+2. **Project writeup format follows from it:** what it is → outcome → logs, a dated journal he writes himself (replaced the five-heading version on 2026-09-21 — see PRD §7.2, which is authoritative on the format). The logs are the "documentation of reasoning" that skeptical hiring managers say they want, which is how personality and credibility stop being a tradeoff here.
 3. **Audience:** recruiters will read it, but they are a *constraint* (a visitor in a hurry must not be blocked), not the goal. He explicitly rejected a recruiter-optimized site: he wants the site to have personality.
 4. **Never write US-default framing.** He is in Vietnam and will catch it.
 

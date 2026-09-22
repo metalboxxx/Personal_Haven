@@ -1,9 +1,8 @@
 /* ---------------------------------------------------------------------------
    Design tokens. Palette verified against WCAG 2.1 in BOTH themes:
-   text 4.5:1+, UI/borders 3:1+. Dark is a separately tuned palette, not an
-   inversion: warm near-black (#141210, never #000) and the accent desaturated
-   and lightened ~12% from its light-theme value.
-   Colour split is 60/30/10 — paper, ink, one accent (burnt oxide). The accent
+   text 4.5:1+, UI/borders 3:1+. Dark is the owner's four colours as given
+   (navy ground, lavender accent); light is tints of the same four, never an
+   inversion. Colour split is 60/30/10 — ground, ink, one accent. The accent
    is used ONLY for links, focus rings and the single accent rule.
    --------------------------------------------------------------------------- */
 
@@ -41,35 +40,58 @@
   --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
 
+  /* Palette, set 2026-09-22: #17153B > #2E236C > #433D8B > #C8ACD6, main to
+     lesser. The four are the dark theme as given; the light theme is tints of
+     the same four, so the two read as one family. */
+
   /* Light palette (default) */
-  --bg: #FBF9F6;
-  --surface: #F2EDE6;
-  --text: #191612;
-  --muted: #5A534A;
-  --border: #DCD3C6;
-  --border-strong: #8C8375;
-  --accent: #A63A16;
+  --bg: #F7F4FA;
+  --surface: #EDE7F3;
+  --text: #17153B;
+  --muted: #433D8B;
+  --border: #D9CCE3;
+  --border-strong: #A48EBB;
+  --accent: #2E236C;
   --accent-contrast: #FFFFFF;
-  --hero-ink: #B8AFA1;      /* decorative only — deliberately low contrast */
-  --hero-ink-hot: #C98A6B;
-  --selection: #F3D8C9;
+  --hero-ink: #C8ACD6;      /* decorative only — deliberately low contrast */
+  --hero-ink-hot: #433D8B;
+  --selection: #C8ACD6;
 }
 
+/* Dark tokens. Applied by system preference unless the toggle has pinned
+   light, and by the toggle pinning dark. The block is written twice because
+   a media query and an attribute selector cannot share one rule. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #141210;
-    --surface: #1D1A16;
-    --text: #EEE9E1;
-    --muted: #A69D90;
-    --border: #332E27;
-    --border-strong: #6B6156;
-    --accent: #E08B5C;
-    --accent-contrast: #1A1512;
-    --hero-ink: #4A423A;
-    --hero-ink-hot: #6E4E39;
-    --selection: #472C1D;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #17153B;
+    --surface: #2E236C;
+    --text: #EEE8F4;
+    --muted: #A99BC9;
+    --border: #2E236C;
+    --border-strong: #433D8B;
+    --accent: #C8ACD6;
+    --accent-contrast: #17153B;
+    --hero-ink: #2E236C;
+    --hero-ink-hot: #433D8B;
+    --selection: #433D8B;
   }
 }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #17153B;
+  --surface: #2E236C;
+  --text: #EEE8F4;
+  --muted: #A99BC9;
+  --border: #2E236C;
+  --border-strong: #433D8B;
+  --accent: #C8ACD6;
+  --accent-contrast: #17153B;
+  --hero-ink: #2E236C;
+  --hero-ink-hot: #433D8B;
+  --selection: #433D8B;
+}
+:root[data-theme="light"] { color-scheme: light; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -215,6 +237,10 @@ hr.rule {
 }
 .wordmark:hover { color: var(--accent); }
 
+/* Nav hugs the right edge; the toggle sits after it. */
+.site-nav { margin-left: auto; }
+.theme-switch { align-self: center; }
+
 .site-nav ul {
   display: flex;
   gap: var(--s-3);
@@ -272,3 +298,84 @@ main { display: block; }
   font-style: italic;
 }
 
+
+/* --- Theme switch (header) ---------------------------------------------- */
+
+/* A pill with the sun on the left, the moon on the right, and a knob that
+   slides to the active side. State comes from data-theme, which the head
+   script always sets when JS is on. */
+.theme-switch {
+  --sw-h: 1.75rem;
+  --sw-pad: 0.2rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  width: calc(var(--sw-h) * 2);
+  height: var(--sw-h);
+  padding: 0 var(--sw-pad);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+}
+.theme-switch:hover { border-color: var(--accent); }
+.theme-switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.theme-switch__icon {
+  position: relative;
+  z-index: 1;
+  width: 0.9rem;
+  height: 0.9rem;
+  justify-self: center;
+  transition: color 300ms ease;
+}
+/* The active side's icon sits on the knob and takes the knob's contrast colour. */
+:root[data-theme="light"] .theme-switch__sun,
+:root[data-theme="dark"] .theme-switch__moon { color: var(--accent-contrast); }
+
+.theme-switch__knob {
+  position: absolute;
+  top: var(--sw-pad);
+  left: var(--sw-pad);
+  width: calc(var(--sw-h) - 2 * var(--sw-pad) - 2px);
+  height: calc(var(--sw-h) - 2 * var(--sw-pad) - 2px);
+  border-radius: 999px;
+  background: var(--accent);
+  transition: transform 320ms cubic-bezier(0.34, 1.4, 0.64, 1), background-color 1s ease;
+}
+:root[data-theme="dark"] .theme-switch__knob {
+  transform: translateX(calc(var(--sw-h) + 2px));
+}
+
+/* Without JS the switch can do nothing, so it is not shown. */
+html:not(.js) .theme-switch { display: none; }
+
+/* The crossfade. While .theme-fading is on the root (1s after a switch)
+   every colour eases instead of snapping. Transform is deliberately not in
+   the list so the knob keeps its own spring. */
+.theme-fading,
+.theme-fading *,
+.theme-fading *::before,
+.theme-fading *::after {
+  transition:
+    background-color 1s ease,
+    color 1s ease,
+    border-color 1s ease,
+    fill 1s ease,
+    stroke 1s ease,
+    box-shadow 1s ease,
+    outline-color 1s ease;
+}
+.theme-fading .theme-switch__knob {
+  transition: transform 320ms cubic-bezier(0.34, 1.4, 0.64, 1), background-color 1s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-switch__knob,
+  .theme-fading,
+  .theme-fading *,
+  .theme-fading *::before,
+  .theme-fading *::after { transition: none; }
+}

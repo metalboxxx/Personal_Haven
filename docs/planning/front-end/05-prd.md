@@ -21,7 +21,7 @@ The site's thesis is that **the under-resourced thing can beat the better-resour
 
 **In scope (v1):**
 - Three pages: Home, About, Contact.
-- Four project writeups at `/work/<slug>`.
+- Four project writeups. Two stand alone at `/work/<slug>`; two are studies inside one project and sit at `/work/quantitative-trading/<slug>`, under a project page that describes the whole thing (§5, amended 2026-09-21).
 - One decorative/animated visual treatment (§8).
 - Dark and light themes.
 
@@ -44,14 +44,18 @@ The site's thesis is that **the under-resourced thing can beat the better-resour
 ## 5. Information architecture
 
 ```
-/                    Home — thesis, bio, the four writeups with their results
-/work/<slug>         One page per writeup (4)
+/                    Home — thesis, bio, the three top-level projects with their results
+/work/<slug>         One page per standalone writeup (2)
+/work/quantitative-trading            Project page: what the pipeline is, links to its studies
+/work/quantitative-trading/<slug>     One page per study (2)
 /about               Longer background
 /contact             Email + links
 /writing             Reserved in routing, NOT built in v1
 ```
 
-**Home absorbs Work, deliberately.** With four writeups, a separate `/work` index listing four items *and* a homepage that also lists them is duplication. The homepage **is** the work index. This collapses four pages of chrome to three and is a change from the earlier `Home → Work → About → Contact` assumption.
+**Home absorbs Work, deliberately.** With three top-level entries, a separate `/work` index listing them *and* a homepage that also lists them is duplication. The homepage **is** the work index. This collapses four pages of chrome to three and is a change from the earlier `Home → Work → About → Contact` assumption.
+
+**A project page groups studies, added 2026-09-21.** The two quant writeups are studies run through one pipeline, and describing that pipeline twice — once per study — was the duplication the flat layout produced. `/work/quantitative-trading/` is the project: what the pipeline is, its status, and the list of studies inside it. Home lists the project once, not its studies. A project page is not a writeup: it does not follow the §7.2 headings, and the §7.2 heading criterion does not apply to it. Content collection `projects`; a writeup nested under a folder of the same name in `work` is one of its studies.
 
 **No** Services, Testimonials, Process, or skill-percentage bars.
 
@@ -59,7 +63,7 @@ The site's thesis is that **the under-resourced thing can beat the better-resour
 
 **Archetype B — [benkuhn.net](https://www.benkuhn.net)'s information shape.** His *structure* is the reference: bio, then a curated list whose items carry their result. His execution is not.
 
-Home, in order: thesis sentence → two-sentence bio → the four writeups, each with a one-line statement of **what it found** → contact line.
+Home, in order: thesis sentence → two-sentence bio → the three top-level projects, each with a one-line statement of **what it found** → contact line.
 
 Requirements that fix what his site leaves on the table:
 
@@ -88,15 +92,17 @@ The thesis appears **exactly once**, on the home page. Draft:
 
 ### 7.2 Writeup format — identical for all four
 
-Every writeup follows the same five headings, in this order:
+**Rewritten 2026-09-21.** He rewrote the two quant studies himself and replaced the format; the owner writes the writeups from here, and Claude edits, checks and builds. Every writeup follows the same three headings, in this order:
 
-**What it is → Constraint → Decision → What I rejected → Outcome**
+**What it is → Outcome → Logs**
 
-`What it is` was added on 2026-09-10. The four-heading version opened on a constraint applying to a thing the reader had not yet been told about, which he called out directly. It is at most four sentences: what it is, what it does, what state it is in.
+`What it is` is short — what it is, what it does, why he started it. `Outcome` comes second, before any reasoning: the reader gets the number first and the story only if they want it. `Logs` is a dated journal (`### Sep 04 2026 - …`), oldest first, with whatever subheads an entry needs; entries are appended as the project moves, and there is no word cap on a log. The old five-heading format (`Constraint → Decision → What I rejected → Outcome`, 2026-09-10) is gone; what it carried now lives inside the log entries, argued where it happened rather than under a fixed heading.
 
-**Acceptance criterion:** all five headings are present, in this order, in all four writeups, and `What I rejected` is non-empty. That section is the one no other portfolio has, and it is what makes the thesis emerge without being repeated.
+The register is his: first person, mid-thought, feelings stated plainly, mistakes and open positions on the page, AI's contributions attributed to AI in the same breath. A claim from his own experience stands as written and is not sourced against `04`; `04` governs numbers Claude writes, not his.
 
-**Acceptance criterion (altitude, added 2026-09-10):** no writeup contains a file path, a flag name, a config key, a one-line root cause, or a numbered question reference. Those live in each project's `docs/history/` and are debugging records, not decisions. Each writeup stays under ~700 words of body text, measured excluding frontmatter. `cointegration-screen` runs longest because §7.4's AI disclosure lives in it and nowhere else. See `CLAUDE.md`, *Writing the work writeups*, for the full rule set.
+**Acceptance criterion:** all three headings are present, in this order, in all four writeups, and `Logs` has at least one dated entry.
+
+**Acceptance criterion (altitude, added 2026-09-10, narrowed 2026-09-21):** applies to text Claude drafts. No Claude-written paragraph contains a file path, a flag name, a config key, a one-line root cause, or a numbered question reference. What he puts in a log entry is his call. The ~700-word cap is withdrawn with the format. See `.claude/CLAUDE.md`, *Writing the work writeups*, for the full rule set.
 
 ### 7.3 The attribution rule
 
@@ -109,22 +115,23 @@ Per `CLAUDE.md` and `04-project-inventory.md` §1, `Quant_VnStocks` decisions ar
 
 ### 7.4 AI use, disclosed once
 
-The quant writeup states plainly that a model wrote much of the code, and then gives the evidence that matters: what he caught. The transaction tax stated as two-sided when it is sell-side only; a Sharpe ratio applied to raw screening data; a real run that executed when a dry run was intended, disclosed and reverted rather than quietly deleted.
+**Moved to the home page on 2026-09-22**, as a `Role of AI` section between the bio and the project list, source `src/content/role-of-ai.md`. He rewrote it: it is no longer a list of what he caught but an argument about scope, constraint and what the human supplies when a model writes the code. Collapsed by default to its first paragraph with a CSS-only show-more; the full text scrolls in its own box. It sat on `cointegration-screen` until 2026-09-21 and on the quant project page for one day after.
 
-**Amended 2026-09-10:** the earlier version of this section required the verification checklist and the one-line root cause on the page. Both are debugging detail and are now excluded by §7.2's altitude criterion. The disclosure stays; its forensics do not.
+**Amended 2026-09-10:** the earlier version of this section required the verification checklist and the one-line root cause on the page. Both are debugging detail and are excluded by §7.2's altitude criterion for Claude-drafted text. The disclosure stays; its forensics do not.
 
 **Rationale:** the 2025 Stack Overflow survey puts AI adoption at 84% against 3% who highly trust the output; the scarce skill is catching what's wrong, not avoiding the tool. Volunteering this is stronger than being asked. It appears once, in context — never as a badge or a site-wide banner.
 
-### 7.5 The four writeups
+### 7.5 The four writeups, and the project page above two of them
 
 | Slug | Subject | Headline result | Code link |
 |---|---|---|---|
-| `cointegration-screen` | The cointegration pairs screen | 435 pairs → 378 tested → **zero survivors**; VN100 sector 501, zero; pooled 4,950, zero. Plus the ACB/OCB case study and the refusal to loosen `alpha_fdr`. | None — state "code not public" |
-| `pead` | Post-earnings-announcement drift, VN equities | **+4.75% abnormal 20-day return, p=0.0008, n=202** in VN100 mid-caps; nothing in VN30 (n=28, p=0.37). Caveats — the Jan-31 proxy, R²=0.6% — stated as prominently. | None — state "code not public" |
+| `quantitative-trading` *(project page, not a writeup)* | The Vietnamese-market research pipeline | What the pipeline is, its status, links to the two studies below. | None — state "code not public" |
+| `quantitative-trading/cointegration-screen` | The cointegration pairs screen | 435 pairs → 378 tested → **zero survivors**; VN100 sector 501, zero; pooled 4,950, zero. Plus the ACB/OCB case study and the refusal to loosen `alpha_fdr`. | None — state "code not public" |
+| `quantitative-trading/pead` | Post-earnings-announcement drift, VN equities | **+4.75% abnormal 20-day return, p=0.0008, n=202** in VN100 mid-caps; nothing in VN30 (n=28, p=0.37). Caveats — the Jan-31 proxy, R²=0.6% — stated as prominently. | None — state "code not public" |
 | `test-extraction` | The Cambridge/YLE extraction pipeline | 91 commits over five months, ten test batches; **35 of 40** auto-extracted on Đề 043–046, the other five had no answer-key lines in the source. The org chose manual entry. | Owner's call |
 | `exam-item-scoring` | Scoring image-based exam items on a live education platform | Crop-and-overlay scrapped on three failure modes; replaced by a click tolerance radius (Part 1) and transparent boxes with a fixed palette (Part 5); drawing accepted as text. Two commits merged upstream. | Public site; client unnamed, no exam artwork |
 
-**Requirement:** two of these have no public repository. The "no link" state must read as deliberate — a short *code not public* line — never as a missing or broken button.
+**Requirement:** the quant project and both its studies have no public repository. The "no link" state must read as deliberate — a short *code not public* line — never as a missing or broken button.
 
 **Requirement:** writeups 3 and 4 concern the same client but make different claims (*I fixed and tested this* vs *I built this*). They stay separate and must not be conflated.
 
@@ -172,13 +179,13 @@ Authoritative list. The site must not carry:
 
 ## 11. Acceptance criteria
 
-- [ ] Three pages plus four writeups build and deploy to Cloudflare Pages.
+- [ ] Three pages, one project page and four writeups build and deploy to Cloudflare Pages.
 - [ ] The thesis sentence appears exactly once across the entire site.
-- [ ] All four writeups carry a non-empty "What I rejected" section.
+- [ ] All four writeups follow `What it is → Outcome → Logs`, with at least one dated log entry.
 - [ ] No sentence claims a decision the owner did not make (§7.3).
-- [ ] AI use disclosed once, in the quant writeup, with the incident as evidence.
+- [ ] AI use disclosed once, in the `Role of AI` section on the home page.
 - [ ] Both no-link writeups show a deliberate "code not public" line.
-- [ ] Hero motion absent under `prefers-reduced-motion: reduce`; page fully legible with JS disabled.
+- [ ] Hero motion absent under `prefers-reduced-motion: reduce`; page fully legible with JS disabled (the theme toggle hides itself and the system preference applies).
 - [ ] LCP < 2.5s, INP < 200ms, CLS < 0.1; critical path under ~170KB.
 - [ ] 4.5:1 text and 3:1 UI contrast verified in **both** themes.
 - [ ] Site fully operable by keyboard alone.
@@ -204,3 +211,7 @@ Authoritative list. The site must not carry:
 | 2026-09-10 | Home absorbs Work; three pages, not four | Four writeups make a separate index redundant |
 | 2026-09-10 | Animated background is in scope, under five constraints | Scoped exception to `00` §6, recorded in both documents |
 | 2026-09-10 | Writeups gain a `What it is` section and an altitude limit | His call: the pages opened on constraints without saying what the thing was, and carried debugging detail already in the project logs. §7.2 and §7.4 amended |
+| 2026-09-21 | The two quant writeups become studies under a project page, `/work/quantitative-trading/` | His call: they are the same project. Home lists three projects. §7.4 disclosure moves to the project page; both studies drop below 700 words as a result |
+| 2026-09-21 | Writeup format becomes `What it is → Outcome → Logs`; the owner writes the writeups | His call, by rewriting the two quant studies himself: result first, then a dated journal. Five headings and the 700-word cap withdrawn. §7.2 and §11 amended; `.claude/CLAUDE.md` matches |
+| 2026-09-22 | `Role of AI` moves to the home page, collapsed behind a CSS-only show-more | His call, with sketches: first paragraph visible with a fade, the rest in a scroll box. Zero-JS property kept — a hidden checkbox drives it. §7.4 and §11 amended |
+| 2026-09-22 | Palette replaced with his four colours (#17153B > #2E236C > #433D8B > #C8ACD6); a header sun/moon toggle pins light or dark | Dark theme is the palette as given, light is tints of it. The toggle is the one client-JS exception: two inline snippets, no bundle, hidden when JS is off |

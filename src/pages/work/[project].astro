@@ -1,0 +1,129 @@
+---
+import Base from '../../layouts/Base.astro';
+import WorkIndex from '../../components/WorkIndex.astro';
+import { getCollection, render } from 'astro:content';
+import { site } from '../../data/site';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({ params: { project: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const count = (n: number) => ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n] ?? String(n);
+const { Content } = await render(project);
+const d = project.data;
+
+// The studies are the work entries nested under this project's folder.
+const studies = (await getCollection('work', (e) => e.id.startsWith(`${project.id}/`)))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((e) => ({ href: `/work/${e.id}/`, ...e.data }));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  headline: d.title,
+  abstract: d.result,
+  datePublished: d.date.toISOString().slice(0, 10),
+  inLanguage: 'en',
+  author: { '@type': 'Person', name: site.name },
+  hasPart: studies.map((s) => ({ '@type': 'CreativeWork', name: s.title, url: s.href })),
+};
+---
+
+<Base title={`${d.title} — ${site.name}`} description={d.description} jsonLd={jsonLd}>
+  <article class="shell writeup">
+    <header class="writeup__head">
+      {d.subject && <p class="eyebrow">{d.subject}</p>}
+      <h1>{d.title}</h1>
+      <p class="writeup__result">{d.result}</p>
+      <p class="writeup__meta">
+        <time datetime={d.date.toISOString().slice(0, 10)}>{d.dateLabel}</time>
+        <span aria-hidden="true">·</span>
+        {d.code ? (
+          <a href={d.code.href}>{d.code.label}</a>
+        ) : (
+          <span class="writeup__nocode">{d.codeNote}</span>
+        )}
+      </p>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <section class="studies" aria-labelledby="studies-heading">
+      <h2 class="section-heading" id="studies-heading">{count(studies.length)} studies</h2>
+      <WorkIndex items={studies} />
+    </section>
+
+    <nav class="writeup__back" aria-label="Back">
+      <a href="/#work">← All work</a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .writeup { padding-block: var(--s-5) var(--s-7); }
+
+  .writeup__head {
+    max-width: var(--measure);
+    margin-bottom: var(--s-6);
+  }
+
+  .writeup__head h1 {
+    font-size: var(--step-3);
+    letter-spacing: -0.02em;
+  }
+
+  .writeup__result {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-style: italic;
+    line-height: 1.45;
+    margin-top: var(--s-3);
+    padding-left: var(--s-3);
+    border-left: 2px solid var(--accent);
+  }
+
+  .writeup__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--s-1) var(--s-2);
+    margin-top: var(--s-4);
+    margin-bottom: 0;
+    font-size: var(--step--1);
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  .writeup__nocode {
+    color: var(--muted);
+    border: 1px solid var(--border-strong);
+    border-radius: 2px;
+    padding: 0.125rem var(--s-1);
+  }
+
+  /* Same section treatment as the home index, so the studies read as the
+     same kind of list one level down. */
+  .studies { margin-top: var(--s-8); }
+  .section-heading {
+    font-size: var(--step--1);
+    font-family: var(--font-body);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: var(--s-2);
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .writeup__back {
+    max-width: var(--measure);
+    margin-top: var(--s-7);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--border);
+    font-size: var(--step--1);
+  }
+</style>

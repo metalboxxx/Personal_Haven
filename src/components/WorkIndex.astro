@@ -1,0 +1,108 @@
+---
+// The numbered list of writeups. Used on home for the top-level projects and
+// on a project page for the studies inside it — same treatment in both places
+// so a study reads as the same kind of thing as a writeup, one level down.
+interface Item {
+  href: string;
+  title: string;
+  result: string;
+  subject?: string;
+  date: Date;
+  dateLabel: string;
+}
+interface Props {
+  items: Item[];
+}
+const { items } = Astro.props;
+---
+
+<ol class="index" role="list">
+  {items.map((item, i) => (
+    <li class="index__item">
+      <span class="index__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+      <div class="index__body">
+        <h3 class="index__title">
+          <a href={item.href}>{item.title}</a>
+        </h3>
+        <p class="index__result">{item.result}</p>
+        <p class="index__meta">
+          {item.subject && (
+            <>
+              <span>{item.subject}</span>
+              <span aria-hidden="true">·</span>
+            </>
+          )}
+          <time datetime={item.date.toISOString().slice(0, 10)}>{item.dateLabel}</time>
+        </p>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .index {
+    list-style: none;
+    margin: var(--s-6) 0 0;
+    padding: 0;
+  }
+
+  .index__item {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-2);
+    padding-block: var(--s-5);
+    border-top: 1px solid var(--border);
+  }
+  .index__item:first-child { border-top: 0; padding-top: 0; }
+
+  @media (min-width: 48em) {
+    .index__item {
+      grid-template-columns: 5rem minmax(0, 1fr);
+      gap: 0 var(--s-4);
+      padding-block: var(--s-6);
+    }
+  }
+
+  .index__num {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    line-height: 1.1;
+  }
+
+  .index__body { max-width: var(--measure); }
+
+  .index__title {
+    font-size: var(--step-3);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--s-2);
+  }
+  .index__title a {
+    color: var(--text);
+    text-decoration-color: transparent;
+  }
+  .index__title a:hover {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+
+  /* The result line is the hook. It gets the second-largest type on the page. */
+  .index__result {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    margin-bottom: var(--s-2);
+  }
+
+  .index__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1) var(--s-2);
+    font-size: var(--step--1);
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+</style>

@@ -19,7 +19,7 @@ export const site = {
   email: 'minhkhang09122003@gmail.com',
   location: 'Ho Chi Minh City',
   // Used for <title> suffixes and JSON-LD only. Never a tagline in the page body.
-  role: 'Web, security and LLM engineering; an enthuasiast on quantitative trading',
+  role: 'Web security and LLM engineering; an enthuasiast on quantitative trading',
 
   // Add entries here and they render on /contact automatically — nothing else
   // needs editing. Order is the order they appear. Example shape:

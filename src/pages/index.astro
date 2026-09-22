@@ -1,10 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
 import HeroField from '../components/HeroField.astro';
+import WorkIndex from '../components/WorkIndex.astro';
 import { getCollection } from 'astro:content';
 import { site } from '../data/site';
+// Plain markdown import, not a collection: one file, rendered here only.
+import { Content as RoleOfAI } from '../content/role-of-ai.md';
 
-const entries = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+// The home index lists projects and standalone writeups side by side. A
+// writeup nested under a project folder is listed on that project's page
+// instead, so it does not appear twice.
+const projects = await getCollection('projects');
+const standalone = await getCollection('work', (e) => !e.id.includes('/'));
+const entries = [...projects, ...standalone]
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((e) => ({ href: `/work/${e.id}/`, ...e.data }));
+const count = (n: number) => ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n] ?? String(n);
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -18,7 +29,7 @@ const jsonLd = {
 
 <Base
   title={`${site.name} — engineering and quantitative research`}
-  description="Project writeups from Ho Chi Minh City: a cointegration screen that found nothing, post-earnings drift in VN100 mid-caps, a test-extraction pipeline, and QA on a live platform."
+  description="Project writeups from Ho Chi Minh City: quantitative research on Vietnamese equities — a cointegration screen that found nothing and post-earnings drift that exists — a test-extraction pipeline, and exam-item scoring on a live platform."
   jsonLd={jsonLd}
 >
   <section class="hero">
@@ -27,8 +38,7 @@ const jsonLd = {
       {/* The thesis. It appears exactly once on this site — PRD §7.1. Do not
           repeat it in a title, a heading, the footer or a meta description. */}
       <h1 class="thesis">
-        Most of what I build is an answer to the same question: how does the
-        under-resourced thing beat the better-resourced one?
+        Things that stems from my bathroom thoughts, and see it made reality.
       </h1>
     </div>
   </section>
@@ -37,45 +47,42 @@ const jsonLd = {
 
   <section class="shell bio-band">
     <p class="bio measure">
-      I work across web development, security and LLM pipelines, and separately
-      build English-teaching material for Vietnamese students. I am not
-      credentialed in any of it — I run my own curriculum and grade myself
-      honestly.
+      I work across web development, security and LLM pipelines. Part-time I am also a proud
+      English teacher, where I also actively apply my technical skills.
     </p>
   </section>
 
+  {/* Collapsed: first paragraph, faded at the foot, "Show more". Expanded: the
+      rest in its own scroll box about a paragraph and a half tall, "Show less".
+      A hidden checkbox drives both states from CSS — no JS, works with the
+      keyboard (Tab to the control, Space to toggle). */}
+  <section class="shell ai" aria-labelledby="ai-heading">
+    <h2 class="section-heading" id="ai-heading">Role of AI</h2>
+    <input type="checkbox" id="ai-toggle" class="ai__toggle" />
+    <div class="ai__body prose">
+      <RoleOfAI />
+    </div>
+    <label for="ai-toggle" class="ai__more">
+      <span class="ai__more-open">Show more</span>
+      <span class="ai__more-close">Show less</span>
+    </label>
+  </section>
+
   <section class="shell work" id="work" aria-labelledby="work-heading">
-    <h2 class="section-heading" id="work-heading">Four writeups</h2>
+    <h2 class="section-heading" id="work-heading">{count(entries.length)} projects</h2>
+    
+    
+    
     <p class="section-note measure muted">
-      Each one is the same four sections: what the constraint was, what I
-      decided, what I rejected, and what came out. The numbers are the numbers.
+      Here are what I have worked upon
     </p>
 
-    <ol class="index" role="list">
-      {entries.map((entry, i) => (
-        <li class="index__item">
-          <span class="index__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-          <div class="index__body">
-            <h3 class="index__title">
-              <a href={`/work/${entry.id}/`}>{entry.data.title}</a>
-            </h3>
-            <p class="index__result">{entry.data.result}</p>
-            <p class="index__meta">
-              <span>{entry.data.subject}</span>
-              <span aria-hidden="true">·</span>
-              <time datetime={entry.data.date.toISOString().slice(0, 10)}>
-                {entry.data.dateLabel}
-              </time>
-            </p>
-          </div>
-        </li>
-      ))}
-    </ol>
+    <WorkIndex items={entries} />
   </section>
 
   <section class="shell contact-line">
     <p class="measure">
-      Email is the way in: <a href={`mailto:${site.email}`}>{site.email}</a>.
+      Email: <a href={`mailto:${site.email}`}>{site.email}</a>.
       More detail on <a href="/about/">about</a> and <a href="/contact/">contact</a>.
     </p>
   </section>
@@ -109,6 +116,93 @@ const jsonLd = {
     line-height: 1.5;
   }
 
+  /* --- Role of AI: show more / show less, CSS only ----------------------- */
+
+  .ai { padding-top: var(--s-7); }
+
+  /* The checkbox is off-screen but still focusable, so keyboard users can
+     Tab to it and press Space. Its focus ring is drawn on the label instead. */
+  .ai__toggle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .ai__body {
+    margin-top: var(--s-4);
+    /* Fade the foot of the box in both states; the box background is the
+       page background, so the mask reads as text dissolving into the page. */
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 4.5rem), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 4.5rem), transparent);
+  }
+  .ai__body :global(p) { margin-bottom: var(--s-3); }
+  /* The reference list: smaller, muted, a rule above it. */
+  .ai__body :global(.refs) {
+    display: block;
+    margin-top: var(--s-4);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--border);
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .ai__body :global(.refs ol) { padding-left: 1.5em; margin: 0; }
+  .ai__body :global(.refs li) { margin-bottom: var(--s-1); }
+
+  /* Collapsed: the first paragraph in full, the top of the second dissolving
+     under the fade as the teaser. */
+  .ai__toggle:not(:checked) ~ .ai__body { max-height: 13.5rem; overflow: hidden; }
+
+  /* Expanded: a scroll box of its own, roughly a paragraph and a half tall.
+     The bottom padding lets the last lines scroll clear of the fade. */
+  .ai__toggle:checked ~ .ai__body {
+    max-height: 24rem;
+    overflow-y: auto;
+    padding-bottom: 4rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+
+  .ai__more {
+    /* Centred on the page column (the width of the section rule), not on the
+       narrower text measure — against the rule the latter read as off-centre. */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--s-1);
+    margin-top: var(--s-2);
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    cursor: pointer;
+    user-select: none;
+  }
+  .ai__more::after {
+    content: '';
+    width: 0.45em;
+    height: 0.45em;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-0.15em) rotate(45deg);
+    transition: transform 150ms ease;
+  }
+  .ai__toggle:checked ~ .ai__more::after { transform: translateY(0.1em) rotate(225deg); }
+  .ai__more-close { display: none; }
+  .ai__toggle:checked ~ .ai__more .ai__more-open { display: none; }
+  .ai__toggle:checked ~ .ai__more .ai__more-close { display: inline; }
+  .ai__toggle:focus-visible ~ .ai__more {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ai__more::after { transition: none; }
+  }
+
   .work { padding-top: var(--s-8); }
 
   .section-heading {
@@ -124,72 +218,6 @@ const jsonLd = {
   .section-note {
     margin-top: var(--s-3);
     font-size: var(--step-0);
-  }
-
-  .index {
-    list-style: none;
-    margin: var(--s-6) 0 0;
-    padding: 0;
-  }
-
-  .index__item {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--s-2);
-    padding-block: var(--s-5);
-    border-top: 1px solid var(--border);
-  }
-  .index__item:first-child { border-top: 0; padding-top: 0; }
-
-  @media (min-width: 48em) {
-    .index__item {
-      grid-template-columns: 5rem minmax(0, 1fr);
-      gap: 0 var(--s-4);
-      padding-block: var(--s-6);
-    }
-  }
-
-  .index__num {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-variant-numeric: tabular-nums;
-    color: var(--accent);
-    line-height: 1.1;
-  }
-
-  .index__body { max-width: var(--measure); }
-
-  .index__title {
-    font-size: var(--step-3);
-    letter-spacing: -0.02em;
-    margin-bottom: var(--s-2);
-  }
-  .index__title a {
-    color: var(--text);
-    text-decoration-color: transparent;
-  }
-  .index__title a:hover {
-    color: var(--accent);
-    text-decoration-color: var(--accent);
-  }
-
-  /* The result line is the hook. It gets the second-largest type on the page. */
-  .index__result {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: var(--step-1);
-    line-height: 1.45;
-    margin-bottom: var(--s-2);
-  }
-
-  .index__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-1) var(--s-2);
-    font-size: var(--step--1);
-    color: var(--muted);
-    letter-spacing: 0.02em;
-    margin: 0;
   }
 
   .contact-line {
