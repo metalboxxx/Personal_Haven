@@ -1,0 +1,55 @@
+Overview:
+The user asked me to rewrite the Claude-written copy in his style after his own rewrites showed the
+Opus 5.0 text read as arrogant. I rewrote three writeups, About and Contact, and rewrote CLAUDE.md as a
+plain directory guide. He then cut About and Contact down himself, and I added themed link icons and centred the switch icons.
+
+Author: claude-opus-5-5
+SessionIDBasedOn: 22af662f-d2ea-4ba8-8136-181ab0e40a63 (local)
+Log Skill Version: 1.0
+Covers since: 2026-09-24T10-15-50
+
+Detail:
+- Style research. I diffed his rewrites of cointegration-screen.md, role-of-ai.md and
+  projects/quantitative-trading.md against the Opus 5.0 versions, read user_personality.md and the
+  earlier logs, and ran two searches (hedges/boosters stance research; lists of AI-writing tells). What
+  he removed: unhedged verdicts ("the honest reading is"), praise of its own honesty ("caveats stated as
+  loudly as the number"), one-liners, "not X, it is Y" pairs, lecturing. What he writes: a dated story,
+  hedged opinions ("Good I guess?"), stated limits ("As a junior developer"), AI credited in the same
+  sentence. The rules are now in .claude/CLAUDE.md under "How he writes" and "What to avoid".
+- Rewrote pead.md, exam-item-scoring.md and test-extraction.md into What it is -> Outcome -> Logs. His
+  own sentences in pead (the AI-agents idea, the 20-day / 2-week paragraph) were kept verbatim; the
+  exam writeup uses his recorded quotes from 04 section 2. Where 04 gives no day, log headings use a month
+  or range ("May – Sep 2026") rather than an invented date; he may fill real ones.
+- He said the PRD is also Opus 5.0 writing. I did not rewrite it; I fixed only what pushed the old tone
+  or contradicted him: section 7.5 said he refused to loosen the correction, but his cointegration log
+  says he loosened it and paper-traded OCB; section 10 named Ben Kuhn's essay register as the target.
+  Section 13 row added. 04 section 1 still says he "endorsed reporting the negative result" — untouched.
+- He asked that the other writeups' frontmatter match cointegration-screen: `subject` and `codeNote`
+  removed from the three, test-extraction's `result` shortened with no numbers. He had already retitled
+  exam-item-scoring himself ("Grading picture questions"). Dropping codeNote there also dropped the
+  "platform is live, client not named" line; I told him.
+- About and Contact went minimal at his request ("About i feel like it is such cliche"). He then wrote
+  the About paragraphs himself; at his request I rewrote the clunky teaching line ("adamantly … top-notch"
+  -> "I use my tech skills to shape the lessons around each student") and fixed grammar/spelling
+  (astute -> avid, invisible hands -> invisible hand, "per my curiosity" -> "Out of curiosity", etc.),
+  keeping his phrasing ("damn, it feels satisfying", "juice my brain").
+- Contact: first I made the email the h1; he said it should be body text. Now a "Contact" h1, the
+  location, and a label/address list (Email plus site.links). He filled in LinkedIn, Facebook, GitHub in
+  src/data/site.ts; his LinkedIn URL lacked https:// and would have resolved as a relative path, fixed.
+  Icons are @tabler/icons outline SVGs imported ?raw and inlined at build time, stroke currentColor,
+  coloured by --accent so they follow any palette change. Still no client JS. The home page's
+  "Email: … More detail on about and contact" section was removed; the footer keeps the email.
+- Theme switch icons were off-centre under the knob (his screenshot). Measured with Playwright: sun
+  +2.2px in light, moon -3.8px in dark. Cause: icons in 1fr grid columns while the knob used its own
+  offset and a translateX of h+2px, so the two disagreed, and a 0.2rem pad rounded differently on each.
+  Fix in global.css: --sw-k (knob size) and --sw-travel drive both; icons are absolutely positioned with
+  the knob's box, offset and transform, padding centres the glyph, --sw-pad is 3px. Measured 0/0 in
+  both themes; click-a-side still works.
+- Dev-server trap again: after the About rewrite the dev server served stale scoped CSS while dist/ was
+  correct. Verified against `astro preview` on port 4322 instead. Restart `npm run dev` when styles look
+  wrong.
+- Commits since the last log: f78cdf0 (copy rewrite, minimal About/Contact, CLAUDE.md, PRD), e6a69cd
+  (contact icons, LinkedIn URL), 458f253 (switch centring). Nothing pushed.
+- Open: cointegration-screen.md frontmatter `description` still says "the honest reading is", and his
+  body keeps "which is the whole argument in one pair" and "The counterpoint gets equal space" — his
+  file, his call. Log dates in exam-item-scoring and test-extraction are ranges pending his real dates.
