@@ -348,14 +348,18 @@ main { display: block; }
    script always sets when JS is on. */
 .theme-switch {
   --sw-h: 1.75rem;
-  --sw-pad: 0.2rem;
+  --sw-pad: 3px;
+  /* Knob diameter, and how far it travels to the right-hand side. The icons
+     use the same box, offset and transform as the knob, so the browser rounds
+     them identically and each icon sits dead centre under it. */
+  --sw-k: calc(var(--sw-h) - 2 * var(--sw-pad) - 2px);
+  --sw-travel: calc(var(--sw-h) * 2 - 2px - 2 * var(--sw-pad) - var(--sw-k));
+  --sw-icon: 0.9rem;
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
+  display: block;
   width: calc(var(--sw-h) * 2);
   height: var(--sw-h);
-  padding: 0 var(--sw-pad);
+  padding: 0;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   background: var(--surface);
@@ -366,13 +370,17 @@ main { display: block; }
 .theme-switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .theme-switch__icon {
-  position: relative;
+  position: absolute;
   z-index: 1;
-  width: 0.9rem;
-  height: 0.9rem;
-  justify-self: center;
+  top: var(--sw-pad);
+  left: var(--sw-pad);
+  box-sizing: border-box;
+  width: var(--sw-k);
+  height: var(--sw-k);
+  padding: calc((var(--sw-k) - var(--sw-icon)) / 2);
   transition: color 300ms ease;
 }
+.theme-switch__moon { transform: translateX(var(--sw-travel)); }
 /* The active side's icon sits on the knob and takes the knob's contrast colour. */
 :root[data-theme="light"] .theme-switch__sun,
 :root[data-theme="dark"] .theme-switch__moon { color: var(--accent-contrast); }
@@ -381,14 +389,14 @@ main { display: block; }
   position: absolute;
   top: var(--sw-pad);
   left: var(--sw-pad);
-  width: calc(var(--sw-h) - 2 * var(--sw-pad) - 2px);
-  height: calc(var(--sw-h) - 2 * var(--sw-pad) - 2px);
+  width: var(--sw-k);
+  height: var(--sw-k);
   border-radius: 999px;
   background: var(--accent);
   transition: transform 320ms cubic-bezier(0.34, 1.4, 0.64, 1), background-color 1s ease;
 }
 :root[data-theme="dark"] .theme-switch__knob {
-  transform: translateX(calc(var(--sw-h) + 2px));
+  transform: translateX(var(--sw-travel));
 }
 
 /* Without JS the switch can do nothing, so it is not shown. */
