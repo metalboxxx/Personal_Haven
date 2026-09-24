@@ -1,6 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
+import mail from '@tabler/icons/outline/mail.svg?raw';
+import linkedin from '@tabler/icons/outline/brand-linkedin.svg?raw';
+import facebook from '@tabler/icons/outline/brand-facebook.svg?raw';
+import github from '@tabler/icons/outline/brand-github.svg?raw';
+
+// Outline icons, inlined at build time. They draw in currentColor, so they
+// follow the theme tokens: change the palette and the icons change with it.
+const icons: Record<string, string> = { email: mail, linkedin, facebook, github };
+const icon = (label: string) =>
+  (icons[label.toLowerCase()] ?? '')
+    .replace(/<svg[^>]*>/, '<svg class="contact__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">');
 
 // Email first, then site.links. Each row shows the address without its
 // protocol, so the reader sees where the link goes.
@@ -25,7 +36,7 @@ const rows = [
     <dl class="contact__list">
       {rows.map((r) => (
         <div class="contact__row">
-          <dt>{r.label}</dt>
+          <dt><Fragment set:html={icon(r.label)} />{r.label}</dt>
           <dd><a href={r.href}>{r.text}</a></dd>
         </div>
       ))}
@@ -63,6 +74,17 @@ const rows = [
     .contact__row { grid-template-columns: 7rem minmax(0, 1fr); gap: var(--s-3); }
   }
 
-  .contact__row dt { color: var(--muted); }
+  .contact__row dt {
+    display: flex;
+    align-items: center;
+    gap: var(--s-1);
+    color: var(--muted);
+  }
+  .contact__row :global(.contact__icon) {
+    width: 1.15em;
+    height: 1.15em;
+    flex: none;
+    color: var(--accent);
+  }
   .contact__row dd { margin: 0; overflow-wrap: anywhere; }
 </style>

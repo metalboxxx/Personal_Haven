@@ -14,5 +14,8 @@
     "@fontsource-variable/literata": "^5.3.0",
     "@fontsource/bree-serif": "^5.3.0",
     "astro": "^5.18.2"
+  },
+  "devDependencies": {
+    "@tabler/icons": "^3.48.0"
   }
 }

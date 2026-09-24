@@ -21,13 +21,12 @@ export const site = {
   // Used for <title> suffixes and JSON-LD only. Never a tagline in the page body.
   role: 'Web security and LLM engineering; an enthuasiast on quantitative trading',
 
-  // Rendered on /contact under the email, in this order. Nothing else needs
-  // editing. TODO(owner): the three below are placeholders — replace each
-  // `your-handle` with the real one, or delete the line.
+  // Rendered on /contact under the email, in this order. Use full URLs
+  // (https://…). A label with a matching icon in contact.astro gets it.
   links: [
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/your-handle' },
-    { label: 'Facebook', href: 'https://www.facebook.com/your-handle' },
-    { label: 'GitHub', href: 'https://github.com/your-handle' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/khang-nguyen-huu-minh-b53a77255/' },
+    { label: 'Facebook', href: 'https://www.facebook.com/khaz.kz.12/' },
+    { label: 'GitHub', href: 'https://github.com/metalboxxx' },
   ] as SiteLink[],
 };
 
