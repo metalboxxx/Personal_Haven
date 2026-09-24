@@ -126,8 +126,8 @@ Per `CLAUDE.md` and `04-project-inventory.md` §1, `Quant_VnStocks` decisions ar
 | Slug | Subject | Headline result | Code link |
 |---|---|---|---|
 | `quantitative-trading` *(project page, not a writeup)* | The Vietnamese-market research pipeline | What the pipeline is, its status, links to the two studies below. | None — state "code not public" |
-| `quantitative-trading/cointegration-screen` | The cointegration pairs screen | 435 pairs → 378 tested → **zero survivors**; VN100 sector 501, zero; pooled 4,950, zero. Plus the ACB/OCB case study and the refusal to loosen `alpha_fdr`. | None — state "code not public" |
-| `quantitative-trading/pead` | Post-earnings-announcement drift, VN equities | **+4.75% abnormal 20-day return, p=0.0008, n=202** in VN100 mid-caps; nothing in VN30 (n=28, p=0.37). Caveats — the Jan-31 proxy, R²=0.6% — stated as prominently. | None — state "code not public" |
+| `quantitative-trading/cointegration-screen` | The cointegration pairs screen | 435 pairs → 378 tested → **zero survivors**; VN100 sector 501, zero; pooled 4,950, zero. Plus the ACB/OCB case study and the one pair he paper-traded anyway. | None — state "code not public" |
+| `quantitative-trading/pead` | Post-earnings-announcement drift, VN equities | **+4.75% abnormal 20-day return, p=0.0008, n=202** in VN100 mid-caps; nothing in VN30 (n=28, p=0.37). Caveats: the Jan-31 proxy date, yearly data. | None — state "code not public" |
 | `test-extraction` | The Cambridge/YLE extraction pipeline | 91 commits over five months, ten test batches; **35 of 40** auto-extracted on Đề 043–046, the other five had no answer-key lines in the source. The org chose manual entry. | Owner's call |
 | `exam-item-scoring` | Scoring image-based exam items on a live education platform | Crop-and-overlay scrapped on three failure modes; replaced by a click tolerance radius (Part 1) and transparent boxes with a fixed palette (Part 5); drawing accepted as text. Two commits merged upstream. | Public site; client unnamed, no exam artwork |
 
@@ -164,7 +164,7 @@ By reference, not restated — see `00-design-summary.md` §4: 65ch text column,
 ## 10. Content rules
 
 - **Voice:** `../user_personality.md`. Blunt, short, specific. **Banned: "passionate", "leveraging", and any adjective doing work a number could do better.** State outcomes; let the reader supply the adjective. First person throughout.
-- **Register:** the writeups may be discursive — they have room to reason. Ben Kuhn's essay register is the target. This does *not* extend to the CV, which is scanned in seconds and needs the diction without the essay form.
+- **Register:** his, as he writes it in the quant studies and `Role of AI`: a dated story, plain words, hedged opinions, feelings and mistakes on the page. Anything Claude drafts follows the style rules in `.claude/CLAUDE.md`. The CV is different: short, stated, no reasoning.
 - **No US-default framing.** Where data or convention is US-specific, say so.
 ### 10.1 Never publish
 
@@ -216,3 +216,4 @@ Authoritative list. The site must not carry:
 | 2026-09-22 | `Role of AI` moves to the home page, collapsed behind a CSS-only show-more | His call, with sketches: first paragraph visible with a fade, the rest in a scroll box. Zero-JS property kept — a hidden checkbox drives it. §7.4 and §11 amended |
 | 2026-09-22 | Palette replaced with his four colours (#17153B > #2E236C > #433D8B > #C8ACD6); a header sun/moon toggle pins light or dark | Dark theme is the palette as given, light is tints of it. The toggle is the one client-JS exception: two inline snippets, no bundle, hidden when JS is off |
 | 2026-09-24 | Overall look reworked: Bree Serif headings over Literata body text (his picks), header becomes a left rail on wide screens, dates replace 01/02/03 in the project list, caps labels and `·` separators removed | His call: the site read as a copy of the Claude sites (serif display over sans, one centred column, caps eyebrows). Theme switch, Role of AI box, hero field and palette unchanged. `dateLabel` made optional, falling back to the month and year of `date` |
+| 2026-09-24 | Claude-written copy rewritten to match his style: `pead`, `exam-item-scoring` and `test-extraction` moved to `What it is → Outcome → Logs`; About and Contact rewritten | His call: the Opus 5.0 text read as arrogant (verdicts without hedges, praising its own honesty, one-liners). The files he wrote himself were not touched. §7.5 and §10 amended; style rules in `.claude/CLAUDE.md` |

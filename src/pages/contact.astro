@@ -1,79 +1,68 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
+
+// Email first, then site.links. Each row shows the address without its
+// protocol, so the reader sees where the link goes.
+const rows = [
+  { label: 'Email', href: `mailto:${site.email}`, text: site.email },
+  ...site.links.map((l) => ({
+    label: l.label,
+    href: l.href,
+    text: l.href.replace(/^https?:\/\/(www\.)?/, ''),
+  })),
+];
 ---
 
 <Base
   title={`Contact — ${site.name}`}
-  description={`Email ${site.email}. No form, no calendar link — Ho Chi Minh City, UTC+7.`}
+  description={`Email ${site.email}. ${site.location}, UTC+7.`}
 >
-  <article class="shell page">
-    <header class="page__head">
-      <h1>Email. There is no form.</h1>
-    </header>
+  <article class="shell contact">
+    <h1>Contact</h1>
+    <p class="contact__where">{site.location}, UTC+7</p>
 
-    <div class="prose">
-      <p class="lede">
-        <a class="email" href={`mailto:${site.email}`}>{site.email}</a>
-      </p>
-
-      <p>
-        I am in {site.location}, UTC+7.
-      </p>
-
-      <h2>What is useful to send</h2>
-      <ul>
-        <li>
-          A specific question about anything in the writeups. Disagreement about
-          the statistics is more welcome than agreement about them.
-        </li>
-        <li>
-          Work in Vietnamese market data, education technology, or LLM pipelines
-          where the cost per call actually matters.
-        </li>
-        <li>
-          Corrections. If a number on this site is wrong I would rather find out
-          from you than not find out.
-        </li>
-      </ul>
-
-      {site.links.length > 0 && (
-        <>
-          <h2>Elsewhere</h2>
-          <ul>
-            {site.links.map((l) => (
-              <li><a href={l.href}>{l.label}</a>{l.note && <span class="muted"> — {l.note}</span>}</li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      <h2>On code links</h2>
-      <p>
-        None of the writeups carries a code link, and the pages say so plainly
-        rather than showing a link that goes nowhere. The quantitative work
-        carries account configuration that has no business being published, the
-        platform work is not my code to publish, and the extraction pipeline is
-        a side project whose repository I have not published. If you need to see
-        something specific from any of them, ask and I will tell you what I can show.
-      </p>
-    </div>
+    <dl class="contact__list">
+      {rows.map((r) => (
+        <div class="contact__row">
+          <dt>{r.label}</dt>
+          <dd><a href={r.href}>{r.text}</a></dd>
+        </div>
+      ))}
+    </dl>
   </article>
 </Base>
 
 <style>
-  .page { padding-block: var(--s-5) var(--s-7); }
-  .page__head {
+  .contact { padding-block: var(--s-6) var(--s-7); }
+
+  .contact h1 {
+    font-size: var(--step-3);
+    line-height: 1.15;
+  }
+
+  .contact__where {
+    margin-top: var(--s-1);
+    color: var(--muted);
+  }
+
+  .contact__list {
     max-width: var(--measure);
-    padding-bottom: var(--s-4);
-    margin-bottom: var(--s-6);
-    border-bottom: 1px solid var(--border);
+    margin: var(--s-5) 0 0;
   }
-  .page__head h1 { font-size: var(--step-4); line-height: 1.15; letter-spacing: -0.01em; }
-  .email {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-style: italic;
-    word-break: break-word;
+
+  /* Label on the left, address on the right; stacked on narrow screens. */
+  .contact__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding-block: var(--s-2);
+    border-top: 1px solid var(--border);
   }
+  .contact__row:last-child { border-bottom: 1px solid var(--border); }
+  @media (min-width: 36em) {
+    .contact__row { grid-template-columns: 7rem minmax(0, 1fr); gap: var(--s-3); }
+  }
+
+  .contact__row dt { color: var(--muted); }
+  .contact__row dd { margin: 0; overflow-wrap: anywhere; }
 </style>

@@ -1,66 +1,56 @@
 ---
 title: "An extraction pipeline that lost to manual entry"
-subject: "Digitising printed English tests — a side project"
-result: "35 of 40 answers auto-extracted on one paper set; the five that failed had no answer key in the source. The organisation went with manual entry anyway."
+result: "Most answers auto-extracted, but the organisation went with manual entry."
 date: 2026-08-03
 datePrecision: range
 dateLabel: "March – August 2026"
 order: 3
 code: null
-codeNote: "Code not public — this is a side project and the repository has not been published."
-description: "A side-project pipeline that turned printed Cambridge YLE and Vietnamese school papers into structured records, the failure modes it named, and why the organisation chose manual data entry instead."
+description: "A side-project pipeline that turned printed Cambridge YLE and Vietnamese school papers into structured records, where it broke, and why the organisation went with manual data entry."
 ---
 
 ## What it is
 
-A side project that turns printed English tests — Cambridge YLE and KET papers, plus Vietnamese school end-of-term papers — into structured records a system can read. Scans and PDFs go in; questions, answers and tags come out.
+A side project: turning printed English tests (Cambridge YLE and KET papers, and end-of-term papers from Vietnamese schools) into structured records a system can read. Scans and PDFs go in; questions, answers and tags come out.
 
-It is a LangGraph pipeline over a vision model, rewritten from Python into TypeScript partway through. It was never adopted.
-
-## Constraint
-
-The papers are made by teachers, not by a publisher. Layout varies per document. Answer keys are sometimes a labelled line, sometimes a table, sometimes absent.
-
-Three constraints shaped everything after that.
-
-**Per-document cost has to stay near zero.** This is a side project. A pipeline that needs a frontier model on every page is not a pipeline, it is a subscription.
-
-**The tooling has Vietnamese-shaped holes.** PyMuPDF's text overlay failed on Vietnamese font rendering and forced a different approach entirely. An English-language pipeline would never surface that constraint, which is roughly the point.
-
-**Cross-page structure is real.** A reading passage on page 3 and its questions on page 4 are one object. Anything that processes pages independently throws that away.
-
-## Decision
-
-**A cheap model by default, with failure-mode-specific fallbacks.** Gemini Flash on the default path, swappable across Claude, Gemini and GPT. The fallbacks are the part worth describing: two *distinct* fallback models wired to two *specific* observed failure modes — one for the model's recitation refusal, one for API 503s. Not a generic retry with a different name on it.
-
-**Retry loops as graph edges, not `try`/`except`.** The orchestration is a graph with explicit check nodes, so the control flow is a thing you can look at. That matters when the failure is "it produced plausible garbage" rather than "it threw".
-
-**One batched multi-page call instead of per-page loops**, so the model can resolve structure that spans pages.
-
-**A Python-to-TypeScript rewrite**, with the Python kept read-only rather than deleted — the same move as learning TypeScript by mapping every concept onto the Python already known, at project scale, and reversible.
-
-## What I rejected
-
-**A generic retry wrapper.** Two named failure modes with two different responses is more code than one exponential backoff, and it is the only version that tells you what actually went wrong.
-
-**Per-page calls.** Cheaper per request, wrong per document.
-
-**A frontier model on the default path.** Reserved for the fallback edges, where the cost is paid only on the inputs that need it.
-
-**Deleting the Python pipeline.** A rewrite you cannot diff against is a rewrite you cannot check.
-
-**Silently guessing blanks.** Some questions are blank in the *source*. They get flagged for manual fill, not filled with the model's best guess. A confident wrong answer key is worse than a missing one, because nobody goes looking for it.
+It's a LangGraph pipeline over a vision model. It started in Python, and I rewrote it in TypeScript partway through. It was never adopted.
 
 ## Outcome
 
-Five months, ten dated test batches: three rounds of Cambridge Starters across Reading & Writing, Listening and Speaking, plus Vietnamese school papers and a Vstar A2 set.
+**The organisation went with manual data entry.** It was easier to integrate, so the extraction approach was scrapped in production.
 
-The number that says the most: **on one Vietnamese paper set, 35 of 40 answers extracted automatically.** The other five were sentence-arrangement questions with no answer-key lines anywhere in the source teacher's document. There was nothing to extract. They were entered by hand.
+The best result: on one Vietnamese paper set, **35 of 40** answers were extracted automatically. The other five were sentence-arrangement questions, and the teacher's document had no answer key for them anywhere, so there was nothing to extract. Those went in by hand.
 
-That is the honest shape of the result. The pipeline was not beaten by hard documents; it was bounded by documents that did not contain the answer.
+Cropping images by bounding box never worked well. The coordinates the model returns are often off, so the crops land on the wrong area. Still an open problem.
 
-Bounding-box cropping never got there either. The model-returned coordinates are often inaccurate and produce crops over the wrong region — logged as an open problem, not a solved one.
+Over five months it ran on ten dated test batches: three rounds of Cambridge Starters (Reading & Writing, Listening, Speaking), plus Vietnamese school papers and a Vstar A2 set.
 
-**And the organisation chose manual data entry.** The extraction approach was scrapped in production because manual entry was easier to integrate. That is the outcome, and dressing it up as shipped would be a lie about a side project that never claimed to be one.
+## Logs
 
-It is still the better story. A constraint, a build, a rejection and a reason is the same shape as a success, minus the part where you get to be pleased with yourself.
+### Mar 07 2026 - Starting out
+
+### Constraint
+
+The papers are made by teachers, not publishers, so every layout is different. The answer key is sometimes a line, sometimes a table, sometimes missing.
+
+It's a side project, so each document has to cost almost nothing to process.
+
+A reading passage on page 3 and its questions on page 4 belong together, so the pages can't be handled one at a time.
+
+### So
+
+A cheap model by default (Gemini Flash), swappable between Claude, Gemini and GPT. Two fallback models, each for one failure that actually showed up: one for when the model refuses with a recitation error, one for API 503s.
+
+Retries are steps in the graph with their own checks, instead of try/except, so the control flow is visible. That helped most when the output looked fine but was wrong, rather than throwing an error.
+
+All pages go in one call, so the model can connect a passage to its questions.
+
+If a question is blank in the source, it gets flagged for manual fill instead of guessed.
+
+### Mar – Aug 2026 - Vietnamese fonts
+
+PyMuPDF's text overlay broke on Vietnamese font rendering, so that approach had to go. An English-only pipeline would probably never hit this.
+
+### Mar – Aug 2026 - Python to TypeScript
+
+I rewrote the pipeline in TypeScript so it could be used directly, without a translation step. The Python version is still there, read-only, to compare against. It's the same way I learned TypeScript in the first place: mapping each piece onto Python I already knew.

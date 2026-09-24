@@ -21,12 +21,14 @@ export const site = {
   // Used for <title> suffixes and JSON-LD only. Never a tagline in the page body.
   role: 'Web security and LLM engineering; an enthuasiast on quantitative trading',
 
-  // Add entries here and they render on /contact automatically — nothing else
-  // needs editing. Order is the order they appear. Example shape:
-  //   { label: 'GitHub',   href: 'https://github.com/<handle>' },
-  //   { label: 'LinkedIn', href: 'https://linkedin.com/in/<handle>' },
-  //   { label: 'Email',    href: 'mailto:…', note: 'fastest' },
-  links: [] as SiteLink[],
+  // Rendered on /contact under the email, in this order. Nothing else needs
+  // editing. TODO(owner): the three below are placeholders — replace each
+  // `your-handle` with the real one, or delete the line.
+  links: [
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/your-handle' },
+    { label: 'Facebook', href: 'https://www.facebook.com/your-handle' },
+    { label: 'GitHub', href: 'https://github.com/your-handle' },
+  ] as SiteLink[],
 };
 
 export const nav = [

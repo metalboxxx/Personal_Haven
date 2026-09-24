@@ -1,58 +1,52 @@
 ---
-title: "Picture questions, without the pictures moving"
-subject: "Scoring image-based exam items on a live English-learning platform"
-result: "Cropping objects out of a scene and making them clickable was scrapped. A click tolerance radius and a transparent box replaced it."
+title: "Grading picture questions"
+result: "A click tolerance radius and a transparent box. Cropping objects out of a scene and making them clickable was scrapped due to impracticality."
 date: 2026-09-03
 datePrecision: range
 dateLabel: "May – September 2026"
 order: 4
 code: null
-codeNote: "The platform is live and public. The code is not mine to publish, and the client is not named here."
-description: "Cambridge YLE picture questions assume paper. Porting them to a browser meant scrapping an image-manipulation approach for geometry and text."
+description: "Cambridge YLE picture questions are made for paper. Moving them into a browser meant dropping an image-cropping approach for a click radius, transparent boxes and text."
 ---
 
 ## What it is
 
-Work on a live English-learning platform used by real students: designing how Cambridge YLE picture questions get asked and scored in a browser, and running quality checks on the exams before they publish.
+I work on a live English-learning platform that real students use. Two jobs: working out how Cambridge YLE picture questions get asked and scored in a browser, and checking exams for mistakes before they go out. For the checking, an LLM agent reads the published exam and looks for the small errors a human proofreader slides past, like a missing full stop or comma.
 
-Two things, both current. The scoring design is the part with decisions in it. The quality checking is where an LLM agent reads published exam content looking for the errors a human proofreader slides past — a missing full stop, a missing comma.
-
-## Constraint
-
-Starters, Movers and Flyers Listening papers assume paper and a pencil.
-
-Part 1 gives a child a busy scene and a set of names, and asks them to draw a line from each name to the right person. Part 5 asks them to colour named objects in a scene, and then to draw something new into it.
-
-Neither survives a naive port. A line drawn with a mouse is not a line drawn with a pencil, and a child cannot click the exact pixel an author had in mind. Drawing is worse: there is no honest browser equivalent of a seven-year-old sketching a ball under a table.
-
-The platform is also live, with no staging copy, and it is not my codebase — the main author has 24 commits to my 2.
-
-## Decision
-
-**Score a click against a tolerance radius.** The author places one point on the target. A student click counts if it lands within a radius of it. Everything the student sees — the name chip, the line, the dot where it ends — is presentation; the only scored object is the click point, and the radius is never drawn.
-
-**For Part 5, put transparent boxes over the objects.** The author draws a box over the real object in the untouched scene and sets the colour it should be. A picture carries several. The student clicks a box and picks from a fixed palette.
-
-**For the drawing half, accept text.** The author writes out what should be drawn and the student writes what they would draw.
-
-All of it is evaluated in the client, for speed, determinism, and so the interface can say plainly what is being asked.
-
-## What I rejected
-
-**Cropping the objects out and layering them back on top.** This was the first attempt, and it was meant to serve both parts: cut the book out of the scene, lay the crop back over the real book, make that region clickable and selectable. It failed three ways. Image quality was unreliable. The crops did not render consistently. And with the whole scene on screen, students could not tell what they were looking at.
-
-It was scrapped for both parts. It was very ugly.
-
-**Real drawing.** The text fallback is a compromise, and cropping-and-layering existed to avoid it. Text is worse than drawing and better than a drawing tool nobody can use.
-
-**Editing the source artwork.** The transparent box goes over the picture, not into it. An exam scene that has been retouched is no longer the exam scene.
+It's not my codebase. The main author has 24 commits; I have 2.
 
 ## Outcome
 
-Both mechanisms are in use.
+Both picture-question types work in the browser now: a click tolerance radius for Part 1, transparent boxes for Part 5. My first idea, cropping objects out of the picture, was scrapped.
 
-The winning one is the cheaper one by a wide margin. A distance test and a rectangle beat an image pipeline — not because the image pipeline was badly built, but because it had to be right about rendering, cropping and legibility all at once, and the geometry only had to be right about arithmetic. Nothing fancy. It is the solution that survived the iterations.
+The drawing half of Part 5 didn't make it. Students write what they would draw instead. That's a compromise, and it isn't quite the same exam.
 
-The compromise stays on the record: children write out what they would have drawn, and that is not the same exam. It is the closest a browser gets without asking a seven-year-old to operate a drawing tool.
+Two of my commits were merged upstream: a vocabulary importer, and a fix so the backend starts in local development without secrets set up.
 
-Alongside this, the quality work on the platform produced two commits merged upstream by its maintainer — a vocabulary importer, and a guard so the backend starts in local development without secrets configured. Small, and reviewed by someone else, which is what makes them evidence rather than a claim.
+## Logs
+
+### May – Sep 2026 - Picture questions, paper vs browser
+
+### Constraint
+
+Starters, Movers and Flyers Listening papers are made for paper and a pencil. Part 1 gives a child a busy scene and some names, and they draw a line from each name to the right person. Part 5 asks them to colour objects in a scene, then draw something new into it.
+
+In a browser, a child can't click the exact pixel the author had in mind. And there's no good way for a seven-year-old to draw a ball under a table with a mouse.
+
+There's also no staging copy. Changes go straight to the live site.
+
+### First try: crop and layer
+
+Cut the object out of the scene (say, a book), lay the crop back over the real book, and make that spot clickable. It was meant to work for both parts.
+
+It didn't. Image quality was unreliable, the crops didn't render consistently, and with the whole scene on screen students couldn't tell what they were looking at. It was very ugly. Scrapped for both parts.
+
+### So: Part 1
+
+The author puts one point on the target. A student's click counts if it lands within a radius of that point, because realistically students can't click on the exact point. The student sees a line from the name to where they clicked. The radius itself is never shown.
+
+### Part 5
+
+The author draws a transparent box over the real object and sets the colour it should be. The student clicks a box and picks from a fixed palette. For the drawing half, the author writes what should be drawn, and the student writes their answer as text.
+
+It's nothing fancy, but it's the solution after a few iterations of other ideas on how to tackle the image problem. Scoring runs in the browser, for speed, predictable results and a clear screen.

@@ -1,14 +1,12 @@
 ---
 title: "Earnings drift exists in VN100 mid-caps and not in VN30"
-subject: "Post-earnings-announcement drift, Vietnamese equities"
 result: "Mean abnormal drift found in VN100"
 date: 2026-08-03
 datePrecision: day
 dateLabel: "August 2026"
 order: 2
 code: null
-codeNote: "Code not public."
-description: "An event study of post-earnings-announcement drift on Vietnamese equities: a significant result in VN100 mid-caps, nothing in VN30, and the caveats stated as loudly as the number."
+description: "An event study of post-earnings-announcement drift on Vietnamese equities: drift in VN100 mid-caps, nothing detectable in VN30, and what the free data can and can't tell."
 ---
 
 ## What it is
@@ -19,41 +17,37 @@ The idea came when I intended to use AI agents to read financial announcements t
 
 ## Outcome
 
-**VN100 mid-caps: real drift.** n=**202** events. Strong-beat mean abnormal 20-day return **+4.75%**, significant on both a t-test and a rank test — which matters, because event-study returns are not well behaved.
+**VN100 mid-caps: there is drift.** 202 events. After a strong earnings beat, the stock beat the market by **+4.75%** on average over the next 20 trading days, and it holds on two different tests.
 
 This also means there is no need for urgency: there are 20 days to get in. The data suggests too early won't yield any profit either — the real drift happens about 2 weeks later; before that it is just noise.
 
-**VN30 large-caps: nothing.** n=**28**, p=**0.37**. The straightforward reading is that it is already priced in — the most-covered thirty names in the market do not leave a twenty-day gap lying around.
+**VN30 large-caps: nothing.** n=**28**, p=**0.37**. My guess is it's already priced in, since these are the thirty most-watched stocks in the market. But 28 events is a small sample, so I read it as "nothing I could detect", not "nothing there".
 
-The caveats, restated because they belong beside the result:
+Two things to keep in mind with both numbers:
 
-- The event date is a proxy: the 31 January statutory deadline, not an observed announcement.
-- Annual data, because the free tier will not return more.
-- n=28 in VN30 is small enough that "nothing" means "nothing detectable at this sample size", not "nothing exists".
-
-Neither number was allowed to travel without its caveats, and that is the only reason the positive one is worth anything.
+- I don't have real announcement dates. The study uses 31 January, the legal filing deadline, as a stand-in.
+- Yearly data only, because the free data tier doesn't return enough quarters.
 
 ## Logs
 
+### Aug 2026 - Setting it up
+
+PEAD is an old finding in US research. I wanted to see whether it shows up in Vietnam at all, where the disclosure rules and the people trading are different.
+
 ### Constraint
-Post-earnings-announcement drift is one of the oldest anomalies in the US literature. That is exactly why it should not be assumed to transfer: it is a claim about US disclosure conventions, US coverage and US investor mix. The Vietnamese market is a different question, and the data available for asking it is worse.
 
-Two constraints came straight from the free data tier.
+The free vnstock tier has no announcement dates. The one date every company shares is the 31 January filing deadline, so that stands in for the announcement. It's the biggest source of noise in the study, and it only works because it's a Vietnamese rule.
 
-**No announcement dates.** The vnstock free tier does not carry them. The statutory filing deadline is the only date every issuer shares, so 31 January stands in for the announcement date. That proxy is the single largest source of noise in the study, and it is a *Vietnamese* deadline — nothing about this design carries to another market unedited.
+It also returns only four or five quarters, which isn't enough to build quarterly surprises from. So the study runs on yearly figures.
 
-**Annual, not quarterly.** The free tier returns four to five quarters, which is not enough history to build quarterly surprises from. Annual figures are what the sample is made of.
+### So
 
-### Hence
-Run it as a plain event study and split the universe rather than pooling it.
+A plain event study: how a stock moves in the 20 trading days after that date, compared with the market. VN30 and VN100 mid-caps are kept apart, because they're traded very differently and mixing them could let one hide the other.
 
-The measure is abnormal return over the 20 trading days after the event date. Surprise enters twice: once as a continuous magnitude in an OLS specification alongside prior drawdown, and once as a binary beat/miss classification. Both signs came out as theory predicts, which is a weak check but a real one.
+The surprise goes in two ways: as a size (how big the beat or miss was) and as just beat or miss. Both came out pointing the way theory says. A weak check, but it's something.
 
-The split is VN30 large-caps against VN100 mid-caps, kept separate on the reasoning that they are different liquidity and coverage regimes, and that pooling them would let one absorb the other.
+### What didn't pan out
 
-**Surprise magnitude as the tradeable signal.** OLS R² is **0.6%** — R² = 1 − RSS/TSS, the share of the drift the model explains, so 0.6% means surprise *size* explains almost nothing. The binary beat/miss classification carries what signal there is; magnitude stays in only as a specification check.
+Surprise size explains almost nothing: R² is **0.6%**. Beat or miss carries whatever signal there is.
 
-**The beat × deep-drawdown interaction.** It is the most interesting hypothesis in the study — a strong beat on a badly beaten-down stock — and it has **n=1**. The uptrend could just be a normal pullback, not PEAD.
-
-**Treating the proxy date as good enough to headline.** The result is stated with the proxy attached every time it is stated, including here.
-
+The idea I liked most was a strong beat on a stock that had already fallen hard. It had one event, n=1, so there's nothing to say about it yet. That one uptrend could just be a normal pullback, not PEAD.
