@@ -12,7 +12,8 @@ const entry = {
   date: z.date(),
   // Displayed date precision. Some source dates are only known to the month.
   datePrecision: z.enum(['day', 'month', 'range']).default('day'),
-  dateLabel: z.string(),
+  // Optional; without it the month and year of `date` are shown (src/lib/date.ts).
+  dateLabel: z.string().optional(),
   // Ordering on the home page. Lower first.
   order: z.number(),
   // null => renders the deliberate "code not public" line (PRD §7.5).

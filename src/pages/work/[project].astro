@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import WorkIndex from '../../components/WorkIndex.astro';
 import { getCollection, render } from 'astro:content';
 import { site } from '../../data/site';
+import { dateLabel } from '../../lib/date';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -34,12 +35,11 @@ const jsonLd = {
 <Base title={`${d.title} — ${site.name}`} description={d.description} jsonLd={jsonLd}>
   <article class="shell writeup">
     <header class="writeup__head">
-      {d.subject && <p class="eyebrow">{d.subject}</p>}
       <h1>{d.title}</h1>
+      {d.subject && <p class="writeup__subject">{d.subject}</p>}
       <p class="writeup__result">{d.result}</p>
       <p class="writeup__meta">
-        <time datetime={d.date.toISOString().slice(0, 10)}>{d.dateLabel}</time>
-        <span aria-hidden="true">·</span>
+        <time datetime={d.date.toISOString().slice(0, 10)}>{dateLabel(d)}</time>
         {d.code ? (
           <a href={d.code.href}>{d.code.label}</a>
         ) : (
@@ -72,14 +72,19 @@ const jsonLd = {
   }
 
   .writeup__head h1 {
-    font-size: var(--step-3);
-    letter-spacing: -0.02em;
+    font-size: var(--step-4);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .writeup__subject {
+    margin-top: var(--s-2);
+    color: var(--muted);
   }
 
   .writeup__result {
-    font-family: var(--font-display);
     font-size: var(--step-1);
-    font-style: italic;
+    font-weight: 600;
     line-height: 1.45;
     margin-top: var(--s-3);
     padding-left: var(--s-3);
@@ -95,7 +100,6 @@ const jsonLd = {
     margin-bottom: 0;
     font-size: var(--step--1);
     color: var(--muted);
-    letter-spacing: 0.02em;
   }
 
   .writeup__nocode {
@@ -108,16 +112,6 @@ const jsonLd = {
   /* Same section treatment as the home index, so the studies read as the
      same kind of list one level down. */
   .studies { margin-top: var(--s-8); }
-  .section-heading {
-    font-size: var(--step--1);
-    font-family: var(--font-body);
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding-bottom: var(--s-2);
-    border-bottom: 2px solid var(--accent);
-  }
 
   .writeup__back {
     max-width: var(--measure);

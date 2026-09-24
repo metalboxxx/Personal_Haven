@@ -34,7 +34,6 @@ const jsonLd = {
 >
   <section class="hero">
     <div class="shell">
-      <p class="eyebrow">{site.location}</p>
       {/* The thesis. It appears exactly once on this site — PRD §7.1. Do not
           repeat it in a title, a heading, the footer or a meta description. */}
       <h1 class="thesis">
@@ -90,28 +89,28 @@ const jsonLd = {
 
 <style>
   .hero {
-    padding-block: var(--s-6) var(--s-5);
+    padding-block: var(--s-6) var(--s-4);
   }
-  @media (min-width: 48em) {
-    .hero { padding-block: var(--s-7) var(--s-6); }
+  /* Beside the rail the thesis starts on the wordmark's line, so the two read
+     as one top edge. */
+  @media (min-width: 64em) {
+    .hero { padding-top: var(--s-6); }
   }
 
+  /* The one loud thing on the site: heavy, tight, upright. */
   .thesis {
-    font-size: var(--step-4);
-    font-weight: 400;
-    font-style: italic;
-    line-height: 1.16;
-    letter-spacing: -0.018em;
-    max-width: 22ch;
-  }
-  @media (min-width: 48em) {
-    .thesis { max-width: 26ch; }
+    font-size: var(--step-5);
+    font-weight: 550;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    max-width: 20ch;
   }
 
   .bio-band {
     padding-top: var(--s-5);
   }
   .bio {
+    font-family: var(--font-display);
     font-size: var(--step-1);
     line-height: 1.5;
   }
@@ -205,16 +204,6 @@ const jsonLd = {
 
   .work { padding-top: var(--s-8); }
 
-  .section-heading {
-    font-size: var(--step--1);
-    font-family: var(--font-body);
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding-bottom: var(--s-2);
-    border-bottom: 2px solid var(--accent);
-  }
   .section-note {
     margin-top: var(--s-3);
     font-size: var(--step-0);

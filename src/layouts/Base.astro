@@ -1,12 +1,8 @@
 ---
-import '@fontsource/inter/latin-400.css';
-import '@fontsource/inter/vietnamese-400.css';
-import '@fontsource/inter/latin-600.css';
-import '@fontsource/inter/vietnamese-600.css';
-import '@fontsource/newsreader/latin-600.css';
-import '@fontsource/newsreader/vietnamese-600.css';
-import '@fontsource/newsreader/latin-400-italic.css';
-import '@fontsource/newsreader/vietnamese-400-italic.css';
+import '@fontsource/bree-serif/latin-400.css';
+import '@fontsource/bree-serif/latin-ext-400.css';
+import '@fontsource-variable/literata/opsz.css';
+import '@fontsource-variable/literata/opsz-italic.css';
 import '../styles/global.css';
 import { site, nav } from '../data/site';
 
@@ -63,8 +59,10 @@ const current = trim(Astro.url.pathname);
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
-      <div class="shell">
-        <a class="wordmark" href="/">{site.name}</a>
+        <div>
+          <a class="wordmark" href="/">{site.name}</a>
+          <p class="site-place">{site.location}</p>
+        </div>
         <nav class="site-nav" aria-label="Primary">
           <ul>
             {nav.map((item) => (
@@ -90,19 +88,21 @@ const current = trim(Astro.url.pathname);
           </svg>
           <span class="theme-switch__knob" aria-hidden="true"></span>
         </button>
-      </div>
     </header>
 
-    <main id="main">
-      <slot />
-    </main>
+    {/* One grid cell beside the rail, so the footer stays under the page. */}
+    <div class="page-column">
+      <main id="main">
+        <slot />
+      </main>
 
-    <footer class="site-footer">
-      <div class="shell">
-        <span>{site.name} — {site.location}</span>
-        <span><a href={`mailto:${site.email}`}>{site.email}</a></span>
-      </div>
-    </footer>
+      <footer class="site-footer">
+        <div class="shell">
+          <span>{site.name}, {site.location}</span>
+          <span><a href={`mailto:${site.email}`}>{site.email}</a></span>
+        </div>
+      </footer>
+    </div>
 
     <script is:inline>
       (function () {

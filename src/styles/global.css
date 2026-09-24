@@ -29,15 +29,16 @@
   --s-8: 8rem;     /* 128 */
 
   --measure: 65ch;
-  --shell: 50rem;   /* 800px page shell — one left edge shared by the header,
-                       the home index and every text page.
-                       Sized so that shell minus its inline padding (~704px)
-                       lands on the 65ch measure: the text column fills the
-                       shell instead of hugging its left edge and leaving a
-                       dead zone to the right on wide screens. */
+  --shell: 56rem;   /* content column; on wide screens it starts at the rail
+                       rather than centring in the window. Text inside still
+                       stops at the 65ch measure. */
+  --rail: 15rem;    /* left rail on wide screens: name, nav, switch */
 
-  --font-display: 'Newsreader', ui-serif, Georgia, 'Times New Roman', serif;
-  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* The owner's choice, 2026-09-24. Bree Serif has one weight (400) and no
+     Vietnamese subset, so anything above 400 in a heading renders as 400.
+     Literata is variable (200–900) with Vietnamese. */
+  --font-display: 'Bree Serif', ui-serif, Georgia, serif;
+  --font-body: 'Literata Variable', ui-serif, Georgia, serif;
   --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
 
   /* Palette, set 2026-09-22: #17153B > #2E236C > #433D8B > #C8ACD6, main to
@@ -116,6 +117,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-body);
+  font-weight: 400;
   font-size: var(--step-0);
   line-height: 1.65;
   font-feature-settings: 'kern' 1, 'liga' 1;
@@ -155,14 +157,14 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1.14;
-  letter-spacing: -0.012em;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   margin: 0;
   text-wrap: balance;
 }
 
-h1 { font-size: var(--step-4); }
+h1 { font-size: var(--step-4); font-weight: 550; }
 h2 { font-size: var(--step-2); }
 h3 { font-size: var(--step-1); }
 
@@ -187,19 +189,17 @@ a:hover { text-decoration-color: var(--accent); }
   border-radius: 2px;
 }
 
-/* Numbers. Every figure on this site is a real measurement — set them so. */
-.num, code, kbd, samp {
+/* Figures line up but stay in the body face. Mono is for code only. */
+.num { font-variant-numeric: tabular-nums; }
+code, kbd, samp {
   font-family: var(--font-mono);
   font-size: 0.92em;
-  font-variant-numeric: tabular-nums;
 }
 
+/* The line above a page title (a parent project, a subject). Sentence case,
+   body face, muted: context, not a label. */
 .eyebrow {
-  font-family: var(--font-body);
-  font-size: var(--step--1);
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: var(--step-0);
   color: var(--muted);
   margin: 0 0 var(--s-2);
 }
@@ -215,41 +215,39 @@ hr.rule {
 
 /* --- Site chrome --------------------------------------------------------- */
 
+/* Narrow screens: a top bar. Wide screens: a sticky left rail holding the
+   name, the nav and the switch, with the page in the column beside it. The
+   rail is what takes the site off the single centred column. */
 .site-header {
   position: relative;
   z-index: 2;
-  padding-block: var(--s-3);
-}
-.site-header > .shell {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-2) var(--s-4);
-  align-items: baseline;
-  justify-content: space-between;
+  align-items: center;
+  padding: var(--s-3) var(--s-3) 0;
 }
+@media (min-width: 48em) { .site-header { padding-inline: var(--s-5); } }
+
 .wordmark {
   font-family: var(--font-display);
-  font-size: var(--step-1);
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-size: var(--step-2);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1;
   color: var(--text);
   text-decoration: none;
 }
 .wordmark:hover { color: var(--accent); }
+.site-place { display: none; margin: 0; font-size: var(--step--1); color: var(--muted); }
 
-/* Nav hugs the right edge; the toggle sits after it. */
 .site-nav { margin-left: auto; }
-.theme-switch { align-self: center; }
-
 .site-nav ul {
   display: flex;
-  gap: var(--s-3);
+  gap: var(--s-2);
   list-style: none;
   margin: 0;
   padding: 0;
-  font-size: var(--step--1);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   font-weight: 600;
 }
 .site-nav a { color: var(--muted); text-decoration: none; }
@@ -257,6 +255,41 @@ hr.rule {
 .site-nav a[aria-current='page'] {
   color: var(--text);
   box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+@media (min-width: 64em) {
+  body {
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+  }
+  .site-header {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    height: 100dvh;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 0;
+    padding: var(--s-6) var(--s-4) var(--s-5) var(--s-5);
+    border-right: 1px solid var(--border);
+  }
+  .site-place { display: block; margin-top: var(--s-1); }
+  .site-nav { margin: var(--s-6) 0 0; }
+  .site-nav ul { flex-direction: column; gap: var(--s-1); font-size: var(--step-1); }
+  /* In the rail the current page is marked from the left edge. */
+  .site-nav a {
+    display: block;
+    margin-left: calc(-1 * var(--s-2) - 2px);
+    padding-left: var(--s-2);
+    border-left: 2px solid transparent;
+  }
+  .site-nav a[aria-current='page'] { box-shadow: none; border-left-color: var(--accent); }
+  .theme-switch { margin-top: auto; }
+
+  /* The content column starts at the rail instead of centring in the window. */
+  .shell { margin-inline: 0; padding-inline: var(--s-6); }
 }
 
 .site-footer {
@@ -296,6 +329,15 @@ main { display: block; }
   border-left: 2px solid var(--border-strong);
   color: var(--muted);
   font-style: italic;
+}
+
+/* Section headings on home and the project page: a real heading in sentence
+   case, not a tracked-out caps label. The rule under it stays — the Role of AI
+   "Show more" is centred against it. */
+.section-heading {
+  font-size: var(--step-2);
+  padding-bottom: var(--s-2);
+  border-bottom: 1px solid var(--border-strong);
 }
 
 

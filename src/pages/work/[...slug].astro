@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import { site } from '../../data/site';
+import { dateLabel } from '../../lib/date';
 
 export async function getStaticPaths() {
   const entries = await getCollection('work');
@@ -32,18 +33,16 @@ const jsonLd = {
 <Base title={`${d.title} — ${site.name}`} description={d.description} jsonLd={jsonLd}>
   <article class="shell writeup">
     <header class="writeup__head">
-      {(parent || d.subject) && (
+      {parent && (
         <p class="eyebrow">
-          {parent && <a href={`/work/${parent.id}/`}>{parent.data.title}</a>}
-          {parent && d.subject && <span aria-hidden="true"> · </span>}
-          {d.subject}
+          A study in <a href={`/work/${parent.id}/`}>{parent.data.title}</a>
         </p>
       )}
       <h1>{d.title}</h1>
+      {d.subject && <p class="writeup__subject">{d.subject}</p>}
       <p class="writeup__result">{d.result}</p>
       <p class="writeup__meta">
-        <time datetime={d.date.toISOString().slice(0, 10)}>{d.dateLabel}</time>
-        <span aria-hidden="true">·</span>
+        <time datetime={d.date.toISOString().slice(0, 10)}>{dateLabel(d)}</time>
         {d.code ? (
           <a href={d.code.href}>{d.code.label}</a>
         ) : (
@@ -77,23 +76,19 @@ const jsonLd = {
   }
 
   .writeup__head h1 {
-    font-size: var(--step-3);
-    letter-spacing: -0.02em;
+    font-size: var(--step-4);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
   }
 
-  .eyebrow a {
-    color: inherit;
-    text-decoration-color: transparent;
-  }
-  .eyebrow a:hover {
-    color: var(--accent);
-    text-decoration-color: var(--accent);
+  .writeup__subject {
+    margin-top: var(--s-2);
+    color: var(--muted);
   }
 
   .writeup__result {
-    font-family: var(--font-display);
     font-size: var(--step-1);
-    font-style: italic;
+    font-weight: 600;
     line-height: 1.45;
     margin-top: var(--s-3);
     padding-left: var(--s-3);
@@ -109,7 +104,6 @@ const jsonLd = {
     margin-bottom: 0;
     font-size: var(--step--1);
     color: var(--muted);
-    letter-spacing: 0.02em;
   }
 
   /* Deliberate, not a broken button. Reads as a stated fact, styled like the
