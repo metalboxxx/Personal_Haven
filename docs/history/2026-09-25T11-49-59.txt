@@ -1,0 +1,69 @@
+Overview:
+Workspace cleanup. The user removed unused skills and the claude-md-management plugin; I replaced the plugin
+with a user-level revise-claude-md skill, cleaned CLAUDE.md, the PRD, user_personality.md and 04, and built a
+monthly read-only maintenance audit for all of D:\Projects (skill plus Windows task scripts, not yet installed).
+
+Author: claude-opus-5-5
+SessionIDBasedOn: 529f86e2-a29d-47eb-b6e1-0b97b4c51cfd (local)
+Log Skill Version: 1.0
+Covers since: 2026-09-24T11-08-33
+
+Detail:
+- Skills. The user proposed deleting brainstorming, writing-plans, subagent-driven-development and
+  verification-before-completion from ~/.claude/skills as seldom used; I agreed and deleted them.
+  Reasons given: brainstorming's "You MUST use this" description forced a question script onto every
+  task; writing-plans duplicates plan mode; subagent-driven-development contradicts the harness rule to
+  spawn agents only when asked; verification is already in the system prompt and PRD §11.
+- Plugins. claude-md-improver and revise-claude-md are one plugin (claude-md-management), so neither can
+  be dropped alone; editing plugin cache files is lost on update, /skills overrides survive. The user
+  pushed me to rethink ("last chance") and to research; I found the plugin untouched since Jan 20 2026,
+  its rubric scoring content but never tone, and /init plus auto memory covering both jobs. He agreed;
+  I uninstalled it. ralph-loop stays user-wide by his choice ("general enough"); do not re-raise it.
+  Plugin scopes are user / project / local, chosen at install with --scope.
+- New user skill ~/.claude/skills/revise-claude-md (1.0), built on his 2026-09-10 rule that CLAUDE.md
+  only describes "the repository the purpose, the organisation, the linking between parts, maybe a
+  little explanation of git ignored". Session learnings go to logs, corrections to memory, facts to
+  their owning doc. It proposes edits before writing. Pointer added in ~/.claude/CLAUDE.md.
+- Doc cleanup, proposed first, then applied with his changes. His past-session messages were read and
+  ranked above Claude summaries.
+  .claude/CLAUDE.md: three inline scripts not two (HeroField has one), datePrecision and code added to
+  the frontmatter line, hero-series.json marked synthetic.
+  05-prd.md v1.1: his home h1 ("Things that stems from my bathroom thoughts…", commit 56fff19) replaces
+  the drafted thesis in §1/§7.1/§11; home order, code-link state and status fixed; Opus 5.0 rhetoric
+  removed. §8 requirement 4 now allows SVG (the shipped hero is SVG); §6 gained the left rail. The §8
+  sentence is his wording: "The background uses a data series from the user's own work." §13 rows
+  untouched, one row added.
+  user_personality.md: code-switching research removed; the voice list retitled "How he talks in chat"
+  and drafting pointed to CLAUDE.md; implications cut to pointers. He said not to mention being a
+  designer; I removed that from my draft and from memory too.
+  04: he asked to remove "Endorsed reporting the negative result honestly" as Opus 5.0 tunnel vision
+  that pushes models towards negativity and bloat; I also cut three phrases with the same slant and
+  recorded it as 04 §6 item 7.
+  Memory website-owner-background: two wrong facts fixed ("no design familiarity", code-switching).
+- Maintenance routine. He wants the monthly cleanup automated and reported. /loop and CronCreate are
+  session-only; cloud routines and Cowork web cannot see local files (Quant is not on GitHub by his
+  choice); he does not want the Desktop app. So: Windows Task Scheduler + claude -p, the pattern
+  Quant_VnStocks/ops already uses. I first claimed Task Scheduler was the only persistent option; the
+  docs showed Desktop local tasks too — corrected in chat. A web claim that -p skips CLAUDE.md is wrong;
+  that is --bare.
+  Skill ~/.claude/skills/maintenance-audit (1.0): read-only, stops if this month's report exists, reads
+  the previous report and never re-raises a declined finding, at most ~10 numbered findings each with one
+  recommendation, footer with the uninstall command. The checklist is every annoyance he raised this
+  session, plus five from a subagent that read 142 of his messages across all three projects (task
+  health after the Quant task failed silently for a week; important rules living only in a skill; code
+  in CLAUDE.md; interface docs drifting from code; unsourced credit to him; hooks losing fixes).
+  Rejected from that list, with reasons in chat: writeup altitude (his text now), Quant per-strategy
+  layout, items already covered.
+  Folder layout was his call: .claude/user-projects-claude-maintenance/ with install-routine.ps1,
+  uninstall-routine.ps1, run-routine.ps1, README.md (first line: how to stop), reports/YYYY-MM-DD.md,
+  logs/ (gitignored). Task ClaudeUserProjects_Maintenance_Monthly, day 1 at 09:17, start-when-available.
+  The auto-mode classifier blocked writing run-routine.ps1 as an unattended agent; he allowed it
+  explicitly. The run is --permission-mode dontAsk with read tools and writes only to reports/. All
+  three scripts parse clean; none has been run.
+  Reminder lines added to ~/.claude/CLAUDE.md and .claude/CLAUDE.md (his concern: loops get forgotten).
+- He declined saving the orchestrator and "save first" rules the subagent found as memories.
+- Open: the first audit runs in a fresh session (his choice), to test the skill without this context.
+  install-routine.ps1 waits until he has read that report. Unverified: whether dontAsk permits the Write
+  rule under .claude/, since Claude Code may guard .claude/ paths; the first scripted run will show it.
+  Memory cv-states-work-site-argues-it and CLAUDE.md "Negative results … stay in" lean the same way as
+  the removed 04 line; raised, not changed.

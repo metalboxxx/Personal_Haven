@@ -21,3 +21,6 @@ Thumbs.db
 .playwright-mcp/
 # Stray screenshots from browser automation
 /*.png
+
+# Raw output of the maintenance routine runs
+.claude/user-projects-claude-maintenance/logs/

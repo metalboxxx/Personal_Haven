@@ -1,14 +1,14 @@
 # User Personality — Reference
 
-**Purpose:** persistent reference for who this site belongs to. Read this before writing any site copy, CV text, or project writeup. Last updated 2026-09-09.
+**Purpose:** persistent reference for who this site belongs to. Read this before writing any site copy, CV text, or project writeup. Last updated 2026-09-25.
 
 ---
 
 ## Basics
 
-Vietnamese, based in Ho Chi Minh City. Works across **web development, cybersecurity, and LLM/API engineering**, and separately builds **English teaching materials for Vietnamese students**.
+Vietnamese, based in Ho Chi Minh City. Works across **web development, cybersecurity, and LLM/API engineering**, and teaches English part-time, building **English teaching materials for Vietnamese students**.
 
-Those two halves are not unrelated hobbies — they have been deliberately merged: an English-tutoring chatbot for Vietnamese grade 6–12 students, and research into which models handle Vietnamese–English code-switching and what is worth fine-tuning vs. just prompting.
+He has merged the two halves, for example in an English-tutoring chatbot for Vietnamese grade 6–12 students.
 
 Not credentialed in any of it. Self-taught, and specifically self-taught **by being quizzed**: TryHackMe rooms worked through topic by topic with repeated redos after scoring badly; self-written grammar exercises completed in a scratchpad before looking at his own answer key; TypeScript learned by mapping every concept onto Python he already knew. Runs his own curriculum and grades himself honestly.
 
@@ -23,7 +23,7 @@ This is the organizing idea of how he thinks, and it shows up in domains that lo
 - **Hardware** — a triple-monitor sim racing setup at roughly $80 per monitor, optimizing bezel width and panel type instead of simply buying up.
 - **Software** — hunts free alternatives to paid tools; the kind of person who clears hidden cache directories to reclaim disk space.
 
-Constraint-driven optimization is what he finds **fun**, not what he settles for. This distinction matters when writing copy about him.
+Constraint-driven optimization is what he finds **fun**, not what he settles for.
 
 ## How he thinks and argues
 
@@ -45,7 +45,9 @@ Demands rigor and says so: asks explicitly for academic-level sourcing, calls ou
 
 Most of what he knows he learned by being quizzed (see Basics). Not a credentialed anything — a person who runs his own curriculum and grades himself honestly.
 
-## Voice — use these rules when drafting copy
+## How he talks in chat
+
+This is his chat voice, not a model for site copy. For writing in his name, follow `.claude/CLAUDE.md`, *Writing*: he writes the writeups himself, and wants grammar and spelling fixed when he asks (CV, About).
 
 - Lowercase, short, blunt.
 - Typos left unfixed rather than gone back over.
@@ -54,14 +56,15 @@ Most of what he knows he learned by being quizzed (see Basics). Not a credential
 - Expands scope mid-conversation — asks one question, then three more that go somewhere else entirely.
 - Impatient with fluff. **Dislikes open-ended menus when a recommendation was asked for.**
 
-**Banned from any copy written in his voice:** "passionate", "leveraging", and any adjective doing work that a specific number could do better.
+**Banned from any copy written in his name:** "passionate", "leveraging", and any adjective doing work that a specific number could do better.
 
 ## Implications for the website
 
-1. **Signature element (proposed, pending his confirmation):** the through-line itself — *how something under-resourced beats something better-resourced* — stated plainly, with projects across unrelated domains as evidence. Nobody can copy it, because it is a real pattern in how he thinks rather than a design choice.
-2. **Project writeup format follows from it:** what it is → outcome → logs, a dated journal he writes himself (replaced the five-heading version on 2026-09-21 — see PRD §7.2, which is authoritative on the format). The logs are the "documentation of reasoning" that skeptical hiring managers say they want, which is how personality and credibility stop being a tradeoff here.
-3. **Audience:** recruiters will read it, but they are a *constraint* (a visitor in a hurry must not be blocked), not the goal. He explicitly rejected a recruiter-optimized site: he wants the site to have personality.
-4. **Never write US-default framing.** He is in Vietnam and will catch it.
+1. **Opening line:** his own, on the home page (PRD §7.1). It replaced the drafted through-line thesis on 2026-09-22.
+2. **Writeups:** he writes them. Format in PRD §7.2, style rules in `.claude/CLAUDE.md`, *Writing*.
+3. **Audience:** recruiters will read it, but they are a *constraint* (a visitor in a hurry must not be blocked), not the goal. He rejected a recruiter-optimized site: he wants the site to have personality.
+4. **Fonts and colours** are his picks. Change only what he names.
+5. **Never write US-default framing.** He is in Vietnam and will catch it.
 
 ## Corrections log
 
@@ -69,3 +72,4 @@ Most of what he knows he learned by being quizzed (see Basics). Not a credential
 - **2026-09-09** — This file was assembled from chat history *outside* the local project scope. It does not yet reflect `D:\Projects\EnglishTest_Tutor` or `D:\Projects\Quant_VnStocks`; see `docs/planning/front-end/04-project-inventory.md`. The user has said he will expand this file substantially with local project detail and remote work.
 - **2026-09-09** — The Vietnamese–English code-switching research is **not a distinct project**. He does not recall it as one; it was likely incidental research inside something else. Do not cite it as a project.
 - **2026-09-09** — EnglishTest_Tutor is a **side project**, not production. The extraction approach was scrapped in production in favour of manual data entry; the nested group repository exists only to make experiments easier. See `docs/planning/front-end/04-project-inventory.md` §6.
+- **2026-09-25** — Cleaned up at his request. Removed the code-switching research from Basics (see the 2026-09-09 entry above). The voice list is his chat voice; drafting rules for his name live in `.claude/CLAUDE.md`. The "signature element" proposal is replaced by his own opening line. Opus 5.0 framing lines cut; the facts from his 2026-09-09 summary are unchanged.
