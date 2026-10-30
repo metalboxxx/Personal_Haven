@@ -24,3 +24,5 @@ Thumbs.db
 
 # Raw output of the maintenance routine runs
 .claude/user-projects-claude-maintenance/logs/
+# Maintenance reports describe every project's internals; keep them off the remote
+.claude/user-projects-claude-maintenance/reports/*.md

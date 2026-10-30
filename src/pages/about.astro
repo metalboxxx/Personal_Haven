@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
+import { Content, frontmatter } from '../content/about.md';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -18,25 +19,10 @@ const jsonLd = {
   jsonLd={jsonLd}
 >
   <article class="shell page">
-    <h1>I'm Khang, in Ho Chi Minh City.</h1>
+    <h1>{frontmatter.heading}</h1>
 
     <div class="prose">
-      <p>
-        I do web development, security and LLM pipelines. Part-time I teach
-        English, and I use my tech skills to shape the lessons around each student.
-      </p>
-      <p>
-        I learn by being challenged, especially when the challenge piques my curiosity.
-        Right now those are cybersecurity and quantitative trading. Most of the time it hurts,
-        getting stuck and losing to the invisible hand of the market, but damn, it feels satisfying
-        once you get the upper hand after all the grueling work.
-      </p>
-      <p>
-        I'm an avid badminton player in my free time, and a hobbyist drummer.
-        Out of curiosity, I also can't stop researching what drumming does to the brain, and
-        whether any of it connects to badminton. And the grand cognitive benefits of both
-        juice my brain.
-      </p>
+      <Content />
     </div>
   </article>
 </Base>

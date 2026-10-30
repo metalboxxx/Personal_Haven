@@ -11,7 +11,7 @@ description: "An event study of post-earnings-announcement drift on Vietnamese e
 
 ## What it is
 
-An event study run through the [same pipeline](/work/quantitative-trading/) as the [pairs screen](/work/quantitative-trading/cointegration-screen/): does a stock keep drifting in the direction of an earnings surprise after the announcement?
+A study run through the [same pipeline](/work/quantitative-trading/) as the [pairs screen](/work/quantitative-trading/cointegration-screen/): does a stock keep drifting in the direction of an earnings surprise after the announcement?
 
 The idea came when I intended to use AI agents to read financial announcements the moment they land, to beat the market on time. The outcome made that unnecessary.
 

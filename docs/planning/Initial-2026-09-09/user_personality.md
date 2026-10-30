@@ -10,8 +10,6 @@ Vietnamese, based in Ho Chi Minh City. Works across **web development, cybersecu
 
 He has merged the two halves, for example in an English-tutoring chatbot for Vietnamese grade 6–12 students.
 
-Not credentialed in any of it. Self-taught, and specifically self-taught **by being quizzed**: TryHackMe rooms worked through topic by topic with repeated redos after scoring badly; self-written grammar exercises completed in a scratchpad before looking at his own answer key; TypeScript learned by mapping every concept onto Python he already knew. Runs his own curriculum and grades himself honestly.
-
 ## The through-line
 
 **How something under-resourced beats something better-resourced.**
